@@ -1,0 +1,98 @@
+Karena semester 6 pada jenjang SMK umumnya berfokus pada pemantapan, ujian sekolah, kelulusan, atau kelanjutan dari Praktik Kerja Lapangan (PKL), capaian kompetensi di bawah ini disusun menggunakan kata kerja operasional yang menggambarkan pencapaian optimal maupun area yang perlu bimbingan.
+
+1. Pendidikan Agama Islam dan Budi Pekerti
+Menunjukkan penguasaan yang sangat baik dalam: menganalisis dan mengevaluasi ketentuan pernikahan dalam Islam, ketentuan waris (faraidh), serta konsisten dalam menyebarkan dakwah Islam secara damai dan menunjukkan perilaku mulia (budi pekerti) dalam kehidupan sehari-hari.
+
+Perlu bimbingan dalam: memahami lebih mendalam mengenai perhitungan pembagian harta waris secara tepat sesuai dengan syariat Islam.
+
+2. Pendidikan Pancasila
+Menunjukkan penguasaan yang sangat baik dalam: menganalisis peluang dan tantangan penerapan Pancasila dalam kehidupan global, serta menunjukkan komitmen aktif dalam merawat kebinikaan, kesadaran hukum, dan bela negara sebagai warga negara yang baik.
+
+Perlu bimbingan dalam: mengidentifikasi strategi solutif dalam mengatasi pelanggaran hak dan pengingkaran kewajiban warga negara di lingkungan sekitar.
+
+3. Bahasa Indonesia
+Menunjukkan penguasaan yang sangat baik dalam: menyusun, mengevaluasi, dan menyajikan dokumen lamaran pekerjaan, kritik, esai, serta artikel ilmiah populer dengan menggunakan struktur dan kebahasaan yang baik, benar, dan persuasif.
+
+Perlu bimbingan dalam: menyunting variasi kosakata formal dan struktur kalimat efektif saat menyusun esai atau artikel formal.
+
+4. Matematika (Umum)
+Menunjukkan penguasaan yang sangat baik dalam: menganalisis, menginterpretasi, dan menyajikan data statistika (ukuran pemusatan dan penyebaran data) serta menentukan peluang suatu kejadian untuk memecahkan masalah kontekstual.
+
+Perlu bimbingan dalam: menghitung nilai simpangan baku dan varians pada data kelompok secara akurat.
+
+5. Bahasa Inggris
+Menunjukkan penguasaan yang sangat baik dalam: memahami, menganalisis, dan menyusun teks fungsional lisan dan tulis berbentuk report text, surat lamaran kerja (application letter), serta simulasi wawancara kerja (job interview) dengan lancar dan percaya diri.
+
+Perlu bimbingan dalam: merespons pertanyaan spontan menggunakan struktur kebahasaan (grammar) yang tepat saat simulasi wawancara kerja.
+
+6. Projek Kreatif dan Kewirausahaan (PKK)
+Menunjukkan penguasaan yang sangat baik dalam: menyusun laporan keuangan sederhana, mengevaluasi keberhasilan usaha, membuat strategi pemasaran digital (digital marketing), serta merencanakan keberlanjutan bisnis/wirausaha mandiri secara kreatif.
+
+Perlu bimbingan dalam: menghitung rasio profitabilitas dan titik impas (Break-Even Point) secara lebih teliti untuk evaluasi usaha.
+
+8. Muatan Lokal Bahasa Daerah
+Menunjukkan penguasaan yang sangat baik dalam: memahami dan menerapkan unggah-ungguh (tata krama) bahasa daerah dalam berkomunikasi, serta mengapresiasi dan mempraktikkan seni pertunjukan atau sastra daerah secara laras dan leres.
+
+Perlu bimbingan dalam: menggunakan ragam bahasa halus (krama inggil/alus) secara konsisten saat berdialog formal dengan orang yang lebih tua.
+
+9 Pendidikan Agama Kristen dan Budi Pekerti
+Menunjukkan penguasaan yang sangat baik dalam: menganalisis peran remaja Kristen dalam mewujudkan perdamaian, keadilan, dan kesetaraan di tengah masyarakat majemuk, serta mengevaluasi gaya hidup modern yang sesuai dengan nilai-nilai Kristiani sebagai wujud kedewasaan iman.
+
+Perlu bimbingan dalam: mengidentifikasi strategi konkret untuk merespons tantangan moral dan etika modernitas berdasarkan kesaksian Alkitab secara kontekstual.
+
+10. Pendidikan Agama Hindu dan Budi Pekerti
+Menunjukkan penguasaan yang sangat baik dalam: menganalisis dan menerapkan konsep Tri Hita Karana serta Tat Twam Asi dalam membangun harmoni sosial, memahami ajaran Moksa sebagai tujuan tertinggi, serta menunjukkan perilaku susila berlandaskan ajaran Dharma dalam kehidupan sehari-hari dan dunia kerja.
+
+Perlu bimbingan dalam: mendalami pemahaman tentang bagian-bagian Catur Purusartha sebagai pilar penyelarasan tujuan hidup sebelum memasuki dunia profesional.
+
+
+########
+########
+########
+
+1. Konsentrasi Keahlian: Teknik Pemesinan (TP)
+Menunjukkan penguasaan yang sangat baik dalam: merancang dan mengeksekusi proses bubut komplek, pengefraisan komponen presisi, serta pembuatan program dan pengoperasian mesin CNC (Bubut/Frais) sesuai dengan gambar kerja dan standar toleransi geometris yang ketat.
+
+Perlu bimbingan dalam: mengoptimalkan pemilihan parameter pemotongan (cutting speed dan feed rate) pada material keras saat proses pemrograman CNC untuk mencegah keausan pahat yang cepat.
+
+2. Konsentrasi Keahlian: Teknik Komputer dan Jaringan (TKJ)
+Menunjukkan penguasaan yang sangat baik dalam: merancang topologi jaringan skala menengah/besar, mengonfigurasi dan menguji routing dinamis, melakukan manajemen bandwidth, serta mengamankan jaringan nirkabel (wireless security) dan mengonfigurasi server layanan jaringan (Layanan Jaringan/Cloud).
+
+Perlu bimbingan dalam: melakukan troubleshooting tingkat lanjut pada pembagian Virtual LAN (VLAN) yang mengalami masalah inter-VLAN routing di lingkungan jaringan terdistribusi.
+
+3. Konsentrasi Keahlian: Teknik Sepeda Motor (TSM)
+Menunjukkan penguasaan yang sangat baik dalam: mendiagnosis kerusakan sistematis, melakukan perbaikan (overhaul) pada komponen mesin (engine), melakukan kalibrasi sistem injeksi bahan bakar elektronik (PGM-FI/FI), serta memperbaiki gangguan kelistrikan bodi dan sasis sepeda motor sesuai Standard Operating Procedure (SOP).
+
+Perlu bimbingan dalam: menganalisis grafik data parameter Live Data pada alat pemindai (diagnostic tools/scanner) saat melacak kegagalan sensor yang sifatnya intermiten (hilang-timbul).
+
+7. Konsentrasi Keahlian: Teknik Otomasi Industri
+Menunjukkan penguasaan yang sangat baik dalam: merancang, merakit, memprogram, dan melakukan troubleshooting pada sistem kontrol otomasi industri berbasis PLC, SCADA, pneumatik/hidrolik, maupun sistem robotika industri sesuai dengan standar K3.
+
+Perlu bimbingan dalam: menganalisis kerusakan kompleks pada integrasi jaringan komunikasi antar-PLC dalam sistem kontrol terdistribusi.
+
+
+########
+########
+########
+
+1. Mapel Pilihan: Gambar MEP - Mekanikal, Elektrikal, Plambing (Teknik Otomasi Industri)
+Menunjukkan penguasaan yang sangat baik dalam: merancang dan menggambar diagram skematik serta tata letak (layout) sistem mekanikal, instalasi listrik industri, kontrol panel otomasi, dan jalur perpipaan (plumbing) menggunakan perangkat lunak CAD sesuai dengan standar regulasi (PUIL) dan simbol teknik internasional.
+
+Perlu bimbingan dalam: menghitung estimasi kebutuhan ruang (space planning) dan koordinasi rute antar-jalur kabel dengan pipa agar tidak terjadi tumpang tindih (clash detection) pada gambar detail.
+
+2. Mapel Pilihan: Sistem Perancangan IoT - Internet of Things (Teknik Komputer dan Jaringan)
+Menunjukkan penguasaan yang sangat baik dalam: merancang arsitektur sistem IoT, mengintegrasikan berbagai komponen sensor dan aktuator dengan mikrokontroler, membangun komunikasi data berbasis protokol jaringan (seperti MQTT/HTTP), serta menampilkan data secara real-time pada dashboard monitoring/cloud platform.
+
+Perlu bimbingan dalam: menerapkan aspek keamanan enkripsi data tingkat dasar pada jalur pengiriman data dari perangkat node menuju broker cloud.
+
+3. Mapel Pilihan: Gambar Teknik Manufaktur (Teknik Sepeda Motor)
+Menunjukkan penguasaan yang sangat baik dalam: membaca, menganalisis, dan membuat gambar teknik komponen sasis atau komponen modifikasi sepeda motor dalam bentuk 2D maupun pemodelan 3D (3D modeling), lengkap dengan penerapan anotasi, ukuran proyeksi, serta nilai toleransi linier dan geometris secara presisi.
+
+Perlu bimbingan dalam: menentukan suaian (fit) yang tepat (suaian longgar, pas, atau paksa) pada gambar detail komponen mesin yang saling berpasangan.
+
+4. Mapel Pilihan: Pemrograman CNC - Computer Numerical Control (Teknik Pemesinan)
+Menunjukkan penguasaan yang sangat baik dalam: menganalisis gambar kerja manufaktur komplek, menyusun urutan proses pengefraisan/pembubutan (process planning), menulis kode pemrograman CNC (G-code dan M-code) secara manual maupun berbasis CAM (Computer-Aided Manufacturing), serta melakukan simulasi pergerakan pahat dengan aman.
+
+Perlu bimbingan dalam: melakukan optimasi feeding dan struktur blok program pada pemakanan kontur melengkung (circular interpolation) untuk menghasilkan kualitas permukaan benda kerja yang halus.
+
+

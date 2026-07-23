@@ -1,0 +1,66 @@
+<div class="panel" id="panel-rapor">
+  <div class="page-header">
+    <div class="page-title">Rapor</div>
+    <div class="page-desc">Cetak rapor tiap kelas</div>
+  </div>
+  <div id="status-message">STATUS</div>
+  <div class="rapor">
+    <h3>Upload data CSV</h3>
+    <a href="uploadCsv/uploadCsv.html" target="_blank">Upload CSV here!</a>
+  </div>
+  <div class="container-rapor">
+    <h3>Print Rapor</h3>
+    <hr />
+    <div class="actions-row">
+      <select class="filter-select" id="filter-classLevel-rapor">
+        <option value="all">Pilih Kelas</option>
+      </select>
+      <select class="filter-select" id="filter-year-rapor">
+        <option value="all">Pilih Tahun Pelajaran</option>
+      </select>
+      <select class="filter-select" id="filter-semester-rapor">
+        <option value="all">Pilih Semester</option>
+      </select>
+      <input
+        type="text"
+        id="input-rapor-date-txt"
+        name="tanggal_rapor"
+        value="Sragen, 19 Juni 2026"
+        placeholder="Isi Tanggal Rapor"
+      />
+      <input
+        type="text"
+        id="input-headmaster-name-txt"
+        name="headmaster_name"
+        value="Sugiyamto, S.Pd., M.Pd."
+        placeholder="Sugiyamto, S.Pd., M.Pd."
+      />
+      <div style="flex: 1"></div>
+      <button class="btn btn-primary" id="btn-preview-rapor">Preview</button>
+      <button class="btn btn-primary" id="btn-print-zip-rapor">
+        Download ZIP (per Kelas)
+      </button>
+      <button class="btn btn-primary" id="btn-print-combined-rapor">
+        Download PDF Gabungan (per Kelas)
+      </button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>NIS</th>
+          <th>NISN</th>
+          <th>Nama Siswa</th>
+          <th>Kelas</th>
+          <th>Wali Kelas</th>
+          <th>Semester</th>
+          <th>Tahun Pelajaran</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="rapor-tbody"></tbody>
+    </table>
+  </div>
+</div>
