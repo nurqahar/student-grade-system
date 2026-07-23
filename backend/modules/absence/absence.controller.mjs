@@ -1,13 +1,14 @@
 import Absence from "./absence.model.mjs";
 import Students from "../students/student.model.mjs";
 import HistoryStudent from "../history_student/history.model.mjs";
+import { successResponse, errorResponse } from "../utils/response.mjs";
 
 export const create = async (req, res) => {
   try {
     const newAbsence = await Absence.create(req.body);
-    return res.status(201).json(newAbsence);
+    return successResponse(res, { data: newAbsence, statusCode: 201 })
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error })
   }
 };
 
@@ -24,12 +25,12 @@ export const uploadCsv = async (req, res) => {
   try {
     dataStudents = await Students.getAll();
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error })
   }
   try {
     dataHistoryStudent = await HistoryStudent.getAll();
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error })
   }
 
   // cocokkan tiap baris csv -> student_nis -> student_id -> history_id
@@ -69,17 +70,14 @@ export const uploadCsv = async (req, res) => {
   }
 
   if (dataToInsert.length === 0) {
-    return res.status(422).json({
-      message: "Tidak ada data yang cocok dengan referensi di database",
-      notFound,
-    });
+    return errorResponse(res, { message: "Tidak ada data yang cocok dengan referensi di database", data: notFound, statusCode: 404 })
   }
 
   try {
     const inserted = await Absence.uploadCsv(dataToInsert);
-    return res.status(201).json({ inserted, notFound });
+    return successResponse(res, { data: inserted, statusCode: 201 })
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error })
   }
 };
 
@@ -89,18 +87,18 @@ export const viewDetail = async (req, res) => {
   const classLevel = { levelName: levelName, className: className };
   try {
     const dataJoined = await Absence.viewDetail(classLevel);
-    return res.status(200).json(dataJoined);
+    return successResponse(res, { data: dataJoined })
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { message: 'Not Found!', statusCode: 404, errors: error })
   }
 };
 
 export const getAll = async (req, res) => {
   try {
     const data = await Absence.getAll();
-    return res.status(200).json(data);
+    return successResponse(res, { data: data })
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { message: "Not Found!", statusCode: 404, errors: error })
   }
 };
 
@@ -108,34 +106,34 @@ export const getById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   try {
     const data = await Absence.getById({ id });
-    return res.status(200).json(data);
+    return successResponse(res, { data: data })
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { message: "id Not Found!", statusCode: 404, errors: error })
   }
 };
 
 export const update = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const dataId = Absence.getById(id);
-  if (!dataId) return res.status(404).send("id Not Found!");
+  if (!dataId) return errorResponse(res, { message: "id Not Found!", data: null })
 
   try {
     const updated = await Absence.update(id, req.body);
-    return res.status(200).json(updated);
+    return successResponse(res, { data: updated })
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { message: "Not Found!", statusCode: 404, errors: error })
   }
 };
 
 export const deleteData = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const dataId = Absence.getById(id);
-  if (!dataId) return res.status(404).send("id Not Found!");
+  if (!dataId) return errorResponse(res, { message: "id Not Found!", data: null })
 
   try {
     const deleted = await Absence.delete(id);
-    return res.status(204).json(deleted);
+    return successResponse(res, { data: deleted, statusCode: 204 })
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { message: "Not Found!", statusCode: 404, errors: error })
   }
 };
