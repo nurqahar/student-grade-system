@@ -14,7 +14,7 @@ export const create = async (req, res) => {
 
 export const uploadCsv = async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
-    return res.send("Empty data");
+    return errorResponse(res, { message: "Empty Data!", statusCode: 400 })
   }
 
   const dataCsv = req.body.data;
@@ -138,7 +138,7 @@ export const update = async (req, res) => {
   }
 
   const dataId = Absence.getById(id);
-  if (!dataId) return errorResponse(res, { message: "id Not Found!", data: null })
+  if (!dataId) return errorResponse(res, { message: "id Not Found!", statusCode: 404, data: null })
 
   try {
     const updated = await Absence.update(id, req.body);
@@ -158,7 +158,7 @@ export const deleteData = async (req, res) => {
   }
 
   const dataId = Absence.getById(id);
-  if (!dataId) return errorResponse(res, { message: "id Not Found!", data: null })
+  if (!dataId) return errorResponse(res, { message: "id Not Found!", statusCode: 404, data: null })
 
   try {
     const deleted = await Absence.delete(id);
