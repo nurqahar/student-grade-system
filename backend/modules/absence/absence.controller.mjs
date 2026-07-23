@@ -89,7 +89,7 @@ export const viewDetail = async (req, res) => {
     const dataJoined = await Absence.viewDetail(classLevel);
     return successResponse(res, { data: dataJoined })
   } catch (error) {
-    return errorResponse(res, { message: 'Not Found!', statusCode: 404, errors: error })
+    return errorResponse(res, { errors: error })
   }
 };
 
@@ -98,22 +98,45 @@ export const getAll = async (req, res) => {
     const data = await Absence.getAll();
     return successResponse(res, { data: data })
   } catch (error) {
-    return errorResponse(res, { message: "Not Found!", statusCode: 404, errors: error })
+    return errorResponse(res, { errors: error })
   }
 };
 
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
+
+  if (isNaN(id) || id <= 0) {
+    return errorResponse(res, {
+      message: "ID tidak valid!",
+      statusCode: 400
+    });
+  }
+
   try {
-    const data = await Absence.getById({ id });
+    const data = await Absence.getById(id);
+
+    if (!data) {
+      return errorResponse(res, {
+        message: "Data not found!",
+        statusCode: 404
+      });
+    }
+
     return successResponse(res, { data: data })
   } catch (error) {
-    return errorResponse(res, { message: "id Not Found!", statusCode: 404, errors: error })
+    return errorResponse(res, { errors: error })
   }
 };
 
 export const update = async (req, res) => {
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) {
+    return errorResponse(res, {
+      message: "ID tidak valid!",
+      statusCode: 400
+    });
+  }
+
   const dataId = Absence.getById(id);
   if (!dataId) return errorResponse(res, { message: "id Not Found!", data: null })
 
@@ -121,12 +144,19 @@ export const update = async (req, res) => {
     const updated = await Absence.update(id, req.body);
     return successResponse(res, { data: updated })
   } catch (error) {
-    return errorResponse(res, { message: "Not Found!", statusCode: 404, errors: error })
+    return errorResponse(res, { errors: error })
   }
 };
 
 export const deleteData = async (req, res) => {
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) {
+    return errorResponse(res, {
+      message: "ID tidak valid!",
+      statusCode: 400
+    });
+  }
+
   const dataId = Absence.getById(id);
   if (!dataId) return errorResponse(res, { message: "id Not Found!", data: null })
 
@@ -134,6 +164,6 @@ export const deleteData = async (req, res) => {
     const deleted = await Absence.delete(id);
     return successResponse(res, { data: deleted, statusCode: 204 })
   } catch (error) {
-    return errorResponse(res, { message: "Not Found!", statusCode: 404, errors: error })
+    return errorResponse(res, { errors: error })
   }
 };

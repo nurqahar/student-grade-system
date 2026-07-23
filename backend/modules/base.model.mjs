@@ -15,7 +15,7 @@ export default class BaseModel {
   }
 
   async getById(id) {
-    const data = await this.db(this.tableName).select().where(id);
+    const data = await this.db(this.tableName).select().where({ id }).first();
     return data;
   }
 
