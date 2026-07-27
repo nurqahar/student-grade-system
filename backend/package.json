@@ -5,6 +5,8 @@
   "main": "app.mjs",
   "type": "commonjs",
   "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "dev": "nodemon app.mjs",
     "gen_rapor": "node ./frontend/raporHandler.mjs",
     "migrate": "knex migrate:latest",
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "live-server": "^1.2.2",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.6"
   }
 }

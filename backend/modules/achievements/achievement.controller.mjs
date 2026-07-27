@@ -5,15 +5,15 @@ import { successResponse, errorResponse } from "../utils/response.mjs";
 export const create = async (req, res) => {
   try {
     const newAchievement = await Achievement.create(req.body);
-    return successResponse(res, { data: newAchievement, statusCode: 201 })
+    return successResponse(res, { data: newAchievement, statusCode: 201 });
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const uploadCsv = async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
-    return errorResponse(res, { message: "Empty Data!", statusCode: 400 })
+    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
   }
 
   const dataCsv = req.body.data;
@@ -23,7 +23,7 @@ export const uploadCsv = async (req, res) => {
   try {
     dataSubjects = await Subjects.getAll();
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 
   // cocokkan tiap baris csv dengan subjects, lalu bentuk data siap insert
@@ -49,14 +49,18 @@ export const uploadCsv = async (req, res) => {
   }
 
   if (dataToInsert.length === 0) {
-    return errorResponse(res, { message: "Tidak ada data yang cocok dengan referensi di database", data: notFound, statusCode: 404 })
+    return errorResponse(res, {
+      message: "Tidak ada data yang cocok dengan referensi di database",
+      data: notFound,
+      statusCode: 404,
+    });
   }
 
   try {
     const inserted = await Achievement.uploadCsv(dataToInsert);
-    return successResponse(res, { data: inserted, statusCode: 201 })
+    return successResponse(res, { data: inserted, statusCode: 201 });
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
 
@@ -66,25 +70,25 @@ export const viewDetail = async (req, res) => {
     const dataJoined = await Achievement.viewDetail(className);
     return res.status(200).json(dataJoined);
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const getAllJoined = async (req, res) => {
   try {
     const dataJoined = await Achievement.getAllJoined();
-    return successResponse(res, { data: dataJoined })
+    return successResponse(res, { data: dataJoined });
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const getAll = async (req, res) => {
   try {
     const data = await Achievement.getAll();
-    return successResponse(res, { data: data })
+    return successResponse(res, { data: data });
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
 
@@ -94,7 +98,7 @@ export const getById = async (req, res) => {
   if (isNaN(id) || id <= 0) {
     return errorResponse(res, {
       message: "ID tidak valid!",
-      statusCode: 400
+      statusCode: 400,
     });
   }
 
@@ -104,13 +108,13 @@ export const getById = async (req, res) => {
     if (!data) {
       return errorResponse(res, {
         message: "Data not found!",
-        statusCode: 404
+        statusCode: 404,
       });
     }
 
-    return successResponse(res, { data: data })
+    return successResponse(res, { data: data });
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
 
@@ -119,18 +123,23 @@ export const update = async (req, res) => {
   if (isNaN(id) || id <= 0) {
     return errorResponse(res, {
       message: "ID tidak valid!",
-      statusCode: 400
+      statusCode: 400,
     });
   }
 
   const dataId = Achievement.getById(id);
-  if (!dataId) return errorResponse(res, { message: "id Not Found!", statusCode: 404, data: null })
+  if (!dataId)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
 
   try {
     const updated = await Achievement.update(id, req.body);
     return res.status(200).json(updated);
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
 
@@ -139,17 +148,22 @@ export const deleteData = async (req, res) => {
   if (isNaN(id) || id <= 0) {
     return errorResponse(res, {
       message: "ID tidak valid!",
-      statusCode: 400
+      statusCode: 400,
     });
   }
 
   const dataId = Achievement.getById(id);
-  if (!dataId) return errorResponse(res, { message: "id Not Found!", statusCode: 404, data: null })
+  if (!dataId)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
 
   try {
     const deleted = await Achievement.delete(id);
-    return successResponse(res, { data: deleted, statusCode: 204 })
+    return successResponse(res, { data: deleted, statusCode: 204 });
   } catch (error) {
-    return errorResponse(res, { errors: error })
+    return errorResponse(res, { errors: error });
   }
 };
