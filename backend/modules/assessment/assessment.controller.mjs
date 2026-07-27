@@ -188,9 +188,9 @@ export const getByIdJoined = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   try {
     const data = await Assessment.getByIdJoined(id);
-    return successResponse(res, {data:data})
+    return successResponse(res, { data: data });
   } catch (error) {
-    return errorResponse(res, {errors:error})
+    return errorResponse(res, { errors: error });
   }
 };
 
