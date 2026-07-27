@@ -1,18 +1,19 @@
 import Classes from "./class.model.mjs";
 import Levels from "../levels/level.model.mjs";
+import { successResponse, errorResponse } from "../utils/response.mjs";
 
 export const create = async (req, res) => {
   try {
-    const created = await Classes.create(req.body);
-    return res.status(201).json(created);
+    const newClasses = await Classes.create(req.body);
+    return successResponse(res, { data: newClasses, statusCode: 201 });
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const uploadCsv = async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
-    return res.send("Empty data");
+    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
   }
 
   const dataCsv = req.body.data;
@@ -22,7 +23,7 @@ export const uploadCsv = async (req, res) => {
   try {
     dataLevels = await Levels.getAll();
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 
   // cocokkan tiap baris csv dengan levels, lalu bentuk data siap insert
@@ -46,108 +47,111 @@ export const uploadCsv = async (req, res) => {
   }
 
   if (dataToInsert.length === 0) {
-    return res.status(422).json({
-      message: "Tidak ada data yang cocok dengan level di database",
-      notFound,
+    return errorResponse(res, {
+      message: "Tidak ada data yang cocok dengan referensi di database",
+      data: notFound,
+      statusCode: 404,
     });
   }
 
   try {
     const inserted = await Classes.uploadCsv(dataToInsert);
-    return res.status(201).json({ inserted, notFound });
+    return successResponse(res, { data: inserted, statusCode: 201 });
   } catch (error) {
-    return res.status(422).json(error);
-  }
-};
-
-//reserved
-export const uploadCsv_res = async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) {
-    return res.send("Empty data");
-  }
-
-  // variabel untuk simpan data yang akan di insert ke tabel
-  let dataToInsert = [];
-
-  // buat cache dari db
-  let dataLevel;
-
-  // simpan data csv
-  const dataCsv = req.body.data;
-
-  // ambil data dari tabel db
-  try {
-    dataLevel = await Levels.getAll();
-  } catch (error) {
-    return res.status(422).json(error);
-  }
-
-  // cocokkan data csv dengan db
-  for (const element of dataCsv) {
-    const found = dataLevel.find(
-      (level) => element.level_name === level.level_name,
-    );
-    if (found)
-      dataToInsert.push({ level_id: found.id, class_name: element.class_name });
-  }
-
-  // insert data to tabel
-  try {
-    const newClasses = Classes.uploadCsv(dataToInsert);
-    return res.status(201).json(newClasses);
-  } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const viewDetail = async (req, res) => {
   try {
-    const dataJoined = await Classes.viewDetail();
-    return res.status(200).json(dataJoined);
+    const data = await Classes.viewDetail();
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const getAll = async (req, res) => {
   try {
     const data = await Classes.getAll();
-    return res.status(200).json(data);
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
+
+  if (isNaN(id) || id <= 0) {
+    return errorResponse(res, {
+      message: "ID tidak valid!",
+      statusCode: 400,
+    });
+  }
+
   try {
     const data = await Classes.getById(id);
-    return res.status(200).json(data);
+
+    if (!data) {
+      return errorResponse(res, {
+        message: "Data not found!",
+        statusCode: 404,
+      });
+    }
+
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const update = async (req, res) => {
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) {
+    return errorResponse(res, {
+      message: "ID tidak valid!",
+      statusCode: 400,
+    });
+  }
+
   const dataId = Classes.getById(id);
-  if (!dataId) return res.status(404).send("id Not Found!");
+  if (!dataId)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
 
   try {
-    const data = await Classes.update(id, req.body);
-    return res.status(200).json(data);
+    const updated = await Classes.update(id, req.body);
+    return successResponse(res, { data: updated });
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const deleteData = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (!id) return res.status(404).send("id Not Found!");
+  if (isNaN(id) || id <= 0) {
+    return errorResponse(res, {
+      message: "ID tidak valid!",
+      statusCode: 400,
+    });
+  }
+
+  const dataId = Classes.getById(id);
+  if (!dataId)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
+
   try {
-    const data = await Classes.delete(id);
-    return res.status(204).json(data);
+    const deleted = await Classes.delete(id);
+    return successResponse(res, { data: deleted, statusCode: 204 });
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
