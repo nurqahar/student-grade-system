@@ -28,6 +28,7 @@
     "puppeteer": "^24.43.0"
   },
   "devDependencies": {
+    "jest": "^30.4.2",
     "live-server": "^1.2.2",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.6"
