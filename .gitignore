@@ -1,3 +1,4 @@
 **/node_modules/
 .env
 TEMPLATE-README.md
+backend/**/*.controller.test.mjs
