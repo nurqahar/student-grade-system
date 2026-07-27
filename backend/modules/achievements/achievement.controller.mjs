@@ -67,8 +67,8 @@ export const uploadCsv = async (req, res) => {
 export const viewDetail = async (req, res) => {
   const className = req.query.className;
   try {
-    const dataJoined = await Achievement.viewDetail(className);
-    return res.status(200).json(dataJoined);
+    const data = await Achievement.viewDetail(className);
+    return successResponse(res, { data: data });
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
