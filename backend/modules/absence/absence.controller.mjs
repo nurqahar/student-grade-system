@@ -166,7 +166,7 @@ export const deleteData = async (req, res) => {
     });
   }
 
-  const dataId = Absence.getById(id);
+  const dataId = await Absence.getById(id);
   if (!dataId)
     return errorResponse(res, {
       message: "id Not Found!",

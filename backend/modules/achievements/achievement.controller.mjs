@@ -118,7 +118,7 @@ export const update = async (req, res) => {
     });
   }
 
-  const dataId = Achievement.getById(id);
+  const dataId = await Achievement.getById(id);
   if (!dataId)
     return errorResponse(res, {
       message: "id Not Found!",
@@ -143,7 +143,7 @@ export const deleteData = async (req, res) => {
     });
   }
 
-  const dataId = Achievement.getById(id);
+  const dataId = await Achievement.getById(id);
   if (!dataId)
     return errorResponse(res, {
       message: "id Not Found!",

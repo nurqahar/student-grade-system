@@ -203,7 +203,7 @@ export const update = async (req, res) => {
     });
   }
 
-  const dataId = Assessment.getById(id);
+  const dataId = await Assessment.getById(id);
   if (!dataId)
     return errorResponse(res, {
       message: "id Not Found!",

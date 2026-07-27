@@ -140,7 +140,7 @@ export const deleteData = async (req, res) => {
     });
   }
 
-  const dataId = Classes.getById(id);
+  const dataId = await Classes.getById(id);
   if (!dataId)
     return errorResponse(res, {
       message: "id Not Found!",

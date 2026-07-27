@@ -5,6 +5,7 @@
   "main": "app.mjs",
   "type": "commonjs",
   "scripts": {
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "dev": "nodemon app.mjs",
