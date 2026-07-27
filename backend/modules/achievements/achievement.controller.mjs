@@ -74,15 +74,6 @@ export const viewDetail = async (req, res) => {
   }
 };
 
-export const getAllJoined = async (req, res) => {
-  try {
-    const dataJoined = await Achievement.getAllJoined();
-    return successResponse(res, { data: dataJoined });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
-
 export const getAll = async (req, res) => {
   try {
     const data = await Achievement.getAll();
