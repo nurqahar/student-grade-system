@@ -7,6 +7,7 @@ import {
   getStudentRaporData,
   splitClassLevel,
 } from "./rapor.service.mjs";
+import { successResponse, errorResponse } from "../utils/response.mjs";
 
 // POST /api/rapor/printZip
 // body: { classLevel, schoolYear?, semester?, raporDate, headmasterName }
@@ -16,7 +17,10 @@ export const printZip = async (req, res) => {
     req.body;
 
   if (!classLevel || classLevel === "all") {
-    return res.status(400).json({ message: "Pilih kelas terlebih dahulu" });
+    return errorResponse(res, {
+      message: "Pilih kelas terlebih dahulu",
+      statusCode: 400,
+    });
   }
 
   const { levelName, className } = splitClassLevel(classLevel);
@@ -33,9 +37,10 @@ export const printZip = async (req, res) => {
     });
 
     if (!studentsData.length) {
-      return res
-        .status(404)
-        .json({ message: "Tidak ada data siswa untuk kelas ini" });
+      return errorResponse(res, {
+        message: "Tidak ada data siswa untuk kelas ini",
+        statusCode: 404,
+      });
     }
 
     browser = await puppeteer.launch();
@@ -55,8 +60,9 @@ export const printZip = async (req, res) => {
     );
     return res.send(zipBuffer);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: error.message });
+    return errorResponse(res, {
+      errors: error,
+    });
   } finally {
     if (browser) await browser.close();
   }
@@ -70,7 +76,10 @@ export const printCombined = async (req, res) => {
     req.body;
 
   if (!classLevel || classLevel === "all") {
-    return res.status(400).json({ message: "Pilih kelas terlebih dahulu" });
+    return errorResponse(res, {
+      message: "Pilih kelas terlebih dahulu",
+      statusCode: 400,
+    });
   }
 
   const { levelName, className } = splitClassLevel(classLevel);
@@ -87,9 +96,10 @@ export const printCombined = async (req, res) => {
     });
 
     if (!studentsData.length) {
-      return res
-        .status(404)
-        .json({ message: "Tidak ada data siswa untuk kelas ini" });
+      return errorResponse(res, {
+        message: "Tidak ada data siswa untuk kelas ini",
+        statusCode: 404,
+      });
     }
 
     browser = await puppeteer.launch();
@@ -115,7 +125,9 @@ export const printCombined = async (req, res) => {
     return res.send(Buffer.from(mergedBuffer));
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: error.message });
+    return errorResponse(res, {
+      errors: error,
+    });
   } finally {
     if (browser) await browser.close();
   }
@@ -128,7 +140,10 @@ export const printStudent = async (req, res) => {
   const { raporDate, headmasterName } = req.query;
 
   if (!historyId) {
-    return res.status(400).json({ message: "historyId tidak valid" });
+    return errorResponse(res, {
+      message: "historyId tidak valid",
+      statusCode: 400,
+    });
   }
 
   let browser;
@@ -140,9 +155,10 @@ export const printStudent = async (req, res) => {
     });
 
     if (!data) {
-      return res
-        .status(404)
-        .json({ message: "Data nilai siswa tidak ditemukan" });
+      return errorResponse(res, {
+        message: "Data nilai siswa tidak ditemukan",
+        statusCode: 404,
+      });
     }
 
     browser = await puppeteer.launch();
@@ -156,7 +172,9 @@ export const printStudent = async (req, res) => {
     return res.send(buffer);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: error.message });
+    return errorResponse(res, {
+      errors: error,
+    });
   } finally {
     if (browser) await browser.close();
   }

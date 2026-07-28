@@ -1,35 +1,36 @@
 import Students from "./student.model.mjs";
+import { successResponse, errorResponse } from "../utils/response.mjs";
 
 export const create = async (req, res) => {
   const class_id = parseInt(req.params.class_id, 10);
 
   try {
     const created = Students.create(req.body);
-    return res.status(201).json(created);
+    return successResponse(res, { data: created, statusCode: 201 });
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const uploadCsv = async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
-    return res.send("Empty data");
+    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
   }
 
   try {
     const newStudents = await Students.uploadCsv(req.body.data);
-    return res.status(201).json(newStudents);
+    return successResponse(res, { data: newStudents, statusCode: 201 });
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const getAll = async (req, res) => {
   try {
     const data = await Students.getAll();
-    return res.status(200).json(data);
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
@@ -37,32 +38,42 @@ export const getById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   try {
     const data = await Students.getById(id);
-    return res.status(200).json(data);
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const update = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const dataId = Students.getById(id);
-  if (!dataId) return res.status(404).send("id Not Found!");
+  if (!dataId)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
 
   try {
     const data = await Students.update(id, req.body);
-    return res.status(200).json(data[0]);
+    return successResponse(res, { data: data[0] });
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const deleteData = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (!id) return res.status(404).send("id Not Found!");
+  if (!id)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
   try {
     const data = await Students.delete(id);
-    return res.status(204).json(data);
+    return successResponse(res, { data: data, statusCode: 204 });
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { errors: error });
   }
 };

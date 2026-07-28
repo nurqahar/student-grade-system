@@ -3,28 +3,29 @@ import Students from "../students/student.model.mjs";
 import Classes from "../classes/class.model.mjs";
 import Teachers from "../teachers/teacher.model.mjs";
 import Levels from "../levels/level.model.mjs";
+import { successResponse, errorResponse } from "../utils/response.mjs";
 
 export const create = async (req, res) => {
   try {
     const newHistoryStudent = await HistoryStudent.create(req.body);
-    return res.status(201).json(newHistoryStudent);
+    return successResponse(res, { data: newHistoryStudent, statusCode: 201 });
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const viewDetail = async (req, res) => {
   try {
     const data = await HistoryStudent.viewDetail();
-    return res.status(200).json(data);
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const uploadCsv = async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
-    return res.send("Empty data");
+    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
   }
 
   const dataCsv = req.body.data;
@@ -38,22 +39,22 @@ export const uploadCsv = async (req, res) => {
   try {
     dataStudents = await Students.getAll();
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
   try {
     dataClasses = await Classes.getAll();
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
   try {
     dataLevels = await Levels.getAll();
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
   try {
     dataTeachers = await Teachers.getAll();
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 
   for (const row of dataCsv) {
@@ -96,26 +97,30 @@ export const uploadCsv = async (req, res) => {
   }
 
   if (dataToInsert.length === 0) {
-    return res.status(422).json({
+    return errorResponse(res, {
       message: "Tidak ada data yang cocok dengan referensi di database",
-      notFound,
+      data: notFound,
+      statusCode: 404,
     });
   }
 
   try {
     const inserted = await HistoryStudent.uploadCsv(dataToInsert);
-    return res.status(201).json({ inserted, notFound });
+    return successResponse(res, {
+      data: { inserted, notFound },
+      statusCode: 201,
+    });
   } catch (error) {
-    return res.status(422).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const getAll = async (req, res) => {
   try {
     const data = await HistoryStudent.getAll();
-    return res.status(200).json(data);
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
@@ -123,34 +128,44 @@ export const getById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   try {
     const data = await HistoryStudent.getById({ id });
-    return res.status(200).json(data);
+    return successResponse(res, { data: data });
   } catch (error) {
-    return res.status(404).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const update = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const dataId = HistoryStudent.getById(id);
-  if (!dataId) return res.status(404).send("id Not Found!");
+  if (!dataId)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
 
   try {
     const updated = await HistoryStudent.update(id, req.body);
-    return res.status(200).json(updated);
+    return successResponse(res, { data: updated });
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
 
 export const deleteData = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const dataId = HistoryStudent.getById(id);
-  if (!dataId) return res.status(404).send("id Not Found!");
+  if (!dataId)
+    return errorResponse(res, {
+      message: "id Not Found!",
+      statusCode: 404,
+      data: null,
+    });
 
   try {
     const deleted = await HistoryStudent.delete(id);
-    return res.status(204).json(deleted);
+    return successResponse(res, { data: deleted, statusCode: 204 });
   } catch (error) {
-    return res.status(409).json(error);
+    return errorResponse(res, { errors: error });
   }
 };
