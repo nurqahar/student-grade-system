@@ -40,7 +40,7 @@ Aplikasi ini dibuat untuk membantu sekolah dalam mengelola data nilai siswa tiap
 
 ## 📂 Folder Structure
 ```
-```
+```structure
 student-grade-system
 ├── Readme.md
 ├── backend
