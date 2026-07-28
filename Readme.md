@@ -39,6 +39,8 @@ Aplikasi ini dibuat untuk membantu sekolah dalam mengelola data nilai siswa tiap
 
 
 ## 📂 Folder Structure
+```
+```text
 student-grade-system
 ├── Readme.md
 ├── backend
@@ -140,3 +142,4 @@ student-grade-system
             ├── uploadCsv.css
             ├── uploadCsv.html
             └── uploadCsv.js
+```
