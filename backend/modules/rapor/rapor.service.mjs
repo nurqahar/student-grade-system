@@ -86,16 +86,14 @@ function buildStudentData({
   const first = assessmentRowsForStudent[0];
   if (!first) return null;
 
-  const subjectMapping = getSubjectMappingByLevel(first.level_name);
-  const prodi = checkProdi(first.class_name);
+  //const subjectMapping = getSubjectMappingByLevel(first.level_name);
+  //const prodi = checkProdi(first.class_name);
 
   const umum = sortBySubjectOrder(
     pickSubjectsByType(assessmentRowsForStudent, "umum"),
-    getSubjectByProdi(subjectMapping, "UMUM"),
   );
   const kejuruan = sortBySubjectOrder(
     pickSubjectsByType(assessmentRowsForStudent, "kejuruan"),
-    getSubjectByProdi(subjectMapping, prodi),
   );
   const mulok = pickSubjectsByType(assessmentRowsForStudent, "mulok");
   const extra = pickSubjectsByType(assessmentRowsForStudent, "ekstra");
