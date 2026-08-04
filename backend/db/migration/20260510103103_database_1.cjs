@@ -22,21 +22,6 @@ exports.up = async function (knex) {
     table.string("level_name").notNullable();
     table.timestamps(true, true);
   });
-  await knex.schema.createTable("subjects", (table) => {
-    table.increments("id");
-    table.string("subject_name").notNullable();
-    table.string("subject_type").notNullable();
-    table.timestamps(true, true);
-  });
-  await knex.schema.createTable("achievements", (table) => {
-    table.increments("id");
-    table.integer("subject_id").unsigned();
-    table.foreign("subject_id").references("subjects.id").onDelete("CASCADE");
-    table.string("competency_achievement", 400);
-    table.string("school_year", 255).notNullable();
-    table.integer("semester").notNullable();
-    table.timestamps(true, true);
-  });
   await knex.schema.createTable("teachers", (table) => {
     table.increments("id");
     table.integer("teacher_registration_number").notNullable();
@@ -56,6 +41,21 @@ exports.up = async function (knex) {
     table.integer("level_id").unsigned();
     table.foreign("level_id").references("levels.id").onDelete("CASCADE");
     table.string("class_name").notNullable();
+    table.timestamps(true, true);
+  });
+  await knex.schema.createTable("subjects", (table) => {
+    table.increments("id");
+    table.string("subject_name").notNullable();
+    table.enu("subject_type",["umum","kejuruan","mulok","pilihan"],{
+      useNative:true,
+      enumName:"type",
+    }).notNullable();
+    table.smallint("order").notNullable()
+    table.string("competency_achievement", 400);
+    table.string("school_year", 255).notNullable();
+    table.integer("semester").notNullable();
+    table.integer("class_id").unsigned();
+    table.foreign("class_id").references("classes.id").onDelete("CASCADE");
     table.timestamps(true, true);
   });
   await knex.schema.createTable("history_student", (table) => {
@@ -99,11 +99,6 @@ exports.up = async function (knex) {
     table.integer("numeric_grade").notNullable();
     table.string("letter_grade");
     table.string("grade_type").notNullable();
-    table.integer("achievement_id").unsigned();
-    table
-      .foreign("achievement_id")
-      .references("achievements.id")
-      .onDelete("CASCADE");
     table.timestamps(true, true);
   });
 };
@@ -116,11 +111,10 @@ exports.down = async function (knex) {
   await knex.schema.dropTable("assessment");
   await knex.schema.dropTable("absence");
   await knex.schema.dropTable("history_student");
+  await knex.schema.dropTable("subjects");
   await knex.schema.dropTable("classes");
   await knex.schema.dropTable("students");
   await knex.schema.dropTable("teachers");
-  await knex.schema.dropTable("achievements");
-  await knex.schema.dropTable("subjects");
   await knex.schema.dropTable("levels");
   await knex.schema.dropTable("setting_rapor");
 };
