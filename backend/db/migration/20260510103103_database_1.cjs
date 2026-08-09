@@ -52,7 +52,6 @@ exports.up = async function (knex) {
     }).notNullable();
     table.smallint("order").notNullable()
     table.string("competency_achievement", 400);
-    table.integer("semester").notNullable();
     table.integer("class_id").unsigned();
     table.foreign("class_id").references("classes.id").onDelete("CASCADE");
     table.timestamps(true, true);
