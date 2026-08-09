@@ -3,7 +3,8 @@ import { successResponse, errorResponse } from "../utils/response.mjs";
 
 export const create = async (req, res) => {
   try {
-    const newSubject = await Subject.create(req.body);
+    const {subject_type, order, competency_achievement, class_id } = req.body
+    const newSubject = await Subject.create({subject_type, order, competency_achievement, class_id });
     return successResponse(res, { data: newSubject, statusCode: 201 });
   } catch (error) {
     return errorResponse(res, { errors: error });
