@@ -7,7 +7,6 @@ import levelRoute from "./levels/level.route.mjs";
 import studentRoute from "./students/student.route.mjs";
 import subjectRoute from "./subjects/subject.route.mjs";
 import teacherRoute from "./teachers/teacher.route.mjs";
-import achievementRoute from "./achievements/achievement.route.mjs";
 import raporRoute from "./rapor/rapor.route.mjs";
 
 const router = express.Router();
@@ -20,7 +19,6 @@ router.use("/levels", levelRoute);
 router.use("/students", studentRoute);
 router.use("/subjects", subjectRoute);
 router.use("/teachers", teacherRoute);
-router.use("/achievement", achievementRoute);
 router.use("/rapor", raporRoute);
 
 export default router;
