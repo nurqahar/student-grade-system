@@ -1,14 +1,17 @@
 import puppeteer from "puppeteer";
 import JSZip from "jszip";
 import { PDFDocument } from "pdf-lib";
-import { renderPdfBuffer, buildFileName } from "../generateRapor.mjs";
 import {
+  renderPdfBuffer,
   getClassRaporData,
   getStudentRaporData,
   splitClassLevel,
 } from "./rapor.service.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
 
+ function buildFileName(data) {
+  return `Rapor_${data.number}_${data.nis}_${data.studentName}_${data.classLevel}.pdf`;
+}
 // POST /api/rapor/printZip
 // body: { classLevel, schoolYear?, semester?, raporDate, headmasterName }
 // -> 1 file .zip berisi PDF rapor tiap siswa di kelas tsb.

@@ -1,5 +1,8 @@
 import Assessment from "../assessment/assessment.model.mjs";
 import Absence from "../absence/absence.model.mjs";
+import fs from "fs";
+import path from "path";
+const __dirname = import.meta.dirname;
 
 // KELAS 12
 const subjectMapping_xii = {
@@ -194,4 +197,62 @@ export function splitClassLevel(classLevel) {
   const levelName = parts[0] || "";
   const className = parts.slice(1).join(" ");
   return { levelName, className };
+}
+
+
+// Menentukan template HTML rapor sesuai tingkat (X / XI / XII).
+function getHtmlPath(levelName) {
+  if (levelName === "X") {
+    return path.resolve(__dirname, "..", "frontend", "rapor_x_genap.html");
+  } else if (levelName === "XI") {
+    return path.resolve(__dirname, "..", "frontend", "rapor_xi_genap.html");
+  } else if (levelName === "XII") {
+    return path.resolve(__dirname, "..", "frontend", "rapor.html");
+  }
+  throw new Error(`levelName tidak dikenali: ${levelName}`);
+}
+
+function buildHtml(templateHtml, data) {
+  const mjsContent = fs.readFileSync(
+    path.resolve(__dirname, "..", "frontend", "rapor.mjs"),
+    "utf8",
+  );
+
+  let html = templateHtml
+    .replace(/\{\{rapor_date\}\}/g, data.rapor_date ?? "")
+    .replace(/\{\{class_advisor_name\}\}/g, data.class_advisor_name ?? "")
+    .replace(/\{\{headmaster_name\}\}/g, data.headmaster_name ?? "")
+    .replace(/\{\{class_advisor_note\}\}/g, data.class_advisor_note ?? "")
+    .replace(/\{\{sakit\}\}/g, data.sakit)
+    .replace(/\{\{izin\}\}/g, data.izin)
+    .replace(/\{\{alpa\}\}/g, data.alpa);
+
+  const scriptInject = `
+    <script>window.__RAPOR_DATA__ = ${JSON.stringify(data)};<\/script>
+    <script type="module">${mjsContent}<\/script>
+  `;
+
+  // Hapus tag src rapor.mjs yang lama, ganti dengan inline
+  return html
+    .replace('<script src="./rapor.mjs" type="module"></script>', "")
+    .replace("</body>", scriptInject + "</body>");
+}
+
+// Render rapor SATU siswa menjadi Buffer PDF.
+// `browser` WAJIB disediakan oleh pemanggil (agar bisa dipakai ulang untuk
+// banyak siswa sekaligus tanpa launch/close browser berkali-kali) dan
+// pemanggil bertanggung jawab menutup browser tsb setelah selesai.
+export async function renderPdfBuffer(data, browser) {
+  const page = await browser.newPage();
+  try {
+    const htmlPath = getHtmlPath(data.levelName);
+    const htmlContent = fs.readFileSync(htmlPath, "utf8");
+    const populatedHtml = buildHtml(htmlContent, data);
+
+    await page.setContent(populatedHtml, { waitUntil: "networkidle0" });
+    const buffer = await page.pdf(pdfPrintOptions(data));
+    return buffer;
+  } finally {
+    await page.close();
+  }
 }
