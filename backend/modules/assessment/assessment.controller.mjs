@@ -1,5 +1,4 @@
 import Assessment from "./assessment.model.mjs";
-import Achievement from "../achievements/achievement.model.mjs";
 import HistoryStudent from "../history_student/history.model.mjs";
 import Subjects from "../subjects/subject.model.mjs";
 import Students from "../students/student.model.mjs";
@@ -27,7 +26,6 @@ export const uploadCsv = async (req, res) => {
   let dataClasses;
   let dataSubjects;
   let dataHistoryStudent;
-  let dataAchievements;
 
   try {
     dataStudents = await Students.getAll();
@@ -46,11 +44,6 @@ export const uploadCsv = async (req, res) => {
   }
   try {
     dataHistoryStudent = await HistoryStudent.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-  try {
-    dataAchievements = await Achievement.getAll();
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
@@ -87,15 +80,6 @@ export const uploadCsv = async (req, res) => {
       (subject) => subject.subject_name === row.subject_name,
     );
 
-    // 6. cari achievement lewat subject_id + school_year + semester
-    const foundAchievement =
-      foundSubject &&
-      dataAchievements.find(
-        (achievement) =>
-          achievement.subject_id === foundSubject.id &&
-          achievement.school_year === row.school_year &&
-          parseInt(achievement.semester, 10) === parseInt(row.semester, 10),
-      );
 
     if (!foundHistory || !foundSubject) {
       notFound.push(row);
@@ -108,7 +92,6 @@ export const uploadCsv = async (req, res) => {
       numeric_grade: parseInt(row.numeric_grade, 10),
       letter_grade: row.letter_grade || null,
       grade_type: row.grade_type,
-      achievement_id: foundAchievement ? foundAchievement.id : null,
     });
   }
 
