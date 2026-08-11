@@ -6,7 +6,7 @@ exports.up = async function (knex) {
   await knex.schema.createTable("setting_rapor", (table) => {
     table.increments("id");
     table.string("school_year", 20).notNullable();
-    table.enu("semester", ["1", "2"]).notNullable();
+    table.smallint("semester").notNullable();
     table.string("rapor_location").notNullable();
     table.date("rapor_date").notNullable();
     table.string("headmaster_name", 50).notNullable();
@@ -46,10 +46,7 @@ exports.up = async function (knex) {
   await knex.schema.createTable("subjects", (table) => {
     table.increments("id");
     table.string("subject_name").notNullable();
-    table.enu("subject_type",["umum","kejuruan","mulok","pilihan"],{
-      useNative:true,
-      enumName:"type",
-    }).notNullable();
+    table.string("subject_type").notNullable();
     table.smallint("order").notNullable()
     table.string("competency_achievement", 400);
     table.integer("class_id").unsigned();
@@ -63,7 +60,7 @@ exports.up = async function (knex) {
     table.integer("class_id").unsigned();
     table.foreign("class_id").references("classes.id").onDelete("CASCADE");
     table.string("school_year", 255).notNullable();
-    table.integer("semester").notNullable();
+    table.smallint("semester").notNullable();
     table.integer("class_advisor_id").notNullable();
     table
       .foreign("class_advisor_id")
@@ -94,7 +91,7 @@ exports.up = async function (knex) {
       .onDelete("CASCADE");
     table.integer("subject_id").unsigned();
     table.foreign("subject_id").references("subjects.id").onDelete("CASCADE");
-    table.integer("numeric_grade").notNullable();
+    table.smallint("numeric_grade").notNullable();
     table.string("letter_grade");
     table.string("grade_type").notNullable();
     table.timestamps(true, true);
