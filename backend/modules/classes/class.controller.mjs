@@ -18,7 +18,6 @@ export const uploadCsv = async (req, res) => {
 
   const dataCsv = req.body.data;
 
-  // ambil data levels dari db untuk mencocokkan level_name -> level_id
   let dataLevels;
   try {
     dataLevels = await Levels.getAll();
@@ -26,7 +25,6 @@ export const uploadCsv = async (req, res) => {
     return errorResponse(res, { errors: error });
   }
 
-  // cocokkan tiap baris csv dengan levels, lalu bentuk data siap insert
   const dataToInsert = [];
   const notFound = [];
 

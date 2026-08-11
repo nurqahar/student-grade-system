@@ -80,7 +80,6 @@ export const uploadCsv = async (req, res) => {
       (subject) => subject.subject_name === row.subject_name,
     );
 
-
     if (!foundHistory || !foundSubject) {
       notFound.push(row);
       continue;

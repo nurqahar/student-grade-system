@@ -199,7 +199,6 @@ export function splitClassLevel(classLevel) {
   return { levelName, className };
 }
 
-
 // Menentukan template HTML rapor sesuai tingkat (X / XI / XII).
 function getHtmlPath(levelName) {
   if (levelName === "X") {

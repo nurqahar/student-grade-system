@@ -19,7 +19,6 @@ export const uploadCsv = async (req, res) => {
 
   const dataCsv = req.body.data;
 
-  // ambil data referensi dari db untuk mencocokkan FK
   let dataStudents;
   let dataHistoryStudent;
   try {
@@ -33,8 +32,6 @@ export const uploadCsv = async (req, res) => {
     return errorResponse(res, { errors: error });
   }
 
-  // cocokkan tiap baris csv -> student_nis -> student_id -> history_id
-  // (history_id dicari lewat kombinasi student_id, school_year, semester)
   const dataToInsert = [];
   const notFound = [];
 

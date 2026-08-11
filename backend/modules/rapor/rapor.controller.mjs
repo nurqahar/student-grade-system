@@ -9,7 +9,7 @@ import {
 } from "./rapor.service.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
 
- function buildFileName(data) {
+function buildFileName(data) {
   return `Rapor_${data.number}_${data.nis}_${data.studentName}_${data.classLevel}.pdf`;
 }
 // POST /api/rapor/printZip
