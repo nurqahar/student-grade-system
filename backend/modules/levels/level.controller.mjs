@@ -1,5 +1,7 @@
 import Level from "./level.model.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
+import { csvParser } from "../utils/csvParser.mjs";
+import { log } from "console";
 
 export const create = async (req, res) => {
   try {
@@ -11,15 +13,31 @@ export const create = async (req, res) => {
 };
 
 export const uploadCsv = async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) {
-    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
+  if (!req.file) {
+    return errorResponse(res, {
+      message: "No File Uploaded!",
+      statusCode: 400,
+    });
   }
 
+  console.log(req.file);
+  console.log(req.file.buffer);
   try {
-    const newLevel = await Level.uploadCsv(req.body.data);
+    const csvFile = await csvParser(req.file.buffer);
+    if (!csvFile || csvFile.length === 0) {
+      return errorResponse(res, {
+        message: "CSV File empy or has no data rows!",
+        statusCode: 400,
+      });
+    }
+
+    const newLevel = await Level.uploadCsv(csvFile);
     return successResponse(res, { data: newLevel, statusCode: 201 });
   } catch (error) {
-    return errorResponse(res, { errors: error });
+    return errorResponse(res, {
+      message: "Failed to upload CSV!",
+      errors: error.message,
+    });
   }
 };
 

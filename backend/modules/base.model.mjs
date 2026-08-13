@@ -33,7 +33,7 @@ export default class BaseModel {
 
   async uploadCsv(dataToInsert) {
     const inserted = await this.db.transaction(async (trx) => {
-      return await trx(this.tableName).insert(dataToInsert);
+      return await trx(this.tableName).insert(dataToInsert).returning("*");
     });
     return inserted;
   }

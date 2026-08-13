@@ -107,7 +107,7 @@ export const uploadCsv = async (req, res) => {
   try {
     const inserted = await HistoryStudent.uploadCsv(dataToInsert);
     return successResponse(res, {
-      data:  inserted, 
+      data: inserted,
       statusCode: 201,
     });
   } catch (error) {
