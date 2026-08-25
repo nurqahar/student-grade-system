@@ -1,14 +1,15 @@
 export class AppError extends Error {
-  constructor(message, data, statusCode = 500, details = null) {
+  constructor(message, statusCode = 500, details = null) {
     super(message);
     this.statusCode = statusCode;
-    ((this.data = data), (this.details = details));
+    this.details = details;
+    this.isOperational = true;
   }
 }
 
 export class ValidationError extends AppError {
-  constructor(message, data, details = null) {
-    super(message, data, 400, details);
+  constructor(message, details = null) {
+    super(message, 400, details);
   }
 }
 

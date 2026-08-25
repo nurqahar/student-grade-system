@@ -3,6 +3,7 @@ import Students from "../students/student.model.mjs";
 import HistoryStudent from "../history_student/history.model.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
+import { ValidationError } from "../errors/AppError.mjs";
 
 export const create = async (req, res) => {
   try {
@@ -60,10 +61,7 @@ export const uploadCsv = asyncHandler(async (req, res) => {
   }
 
   if (dataToInsert.length === 0) {
-    throw new ValidationError(
-      `Data not Match with database ${notFound}`,
-      notFound,
-    );
+    throw new ValidationError(`Data not Match with database ${notFound}`);
   }
 
   const inserted = await Absence.uploadCsv(dataToInsert);
