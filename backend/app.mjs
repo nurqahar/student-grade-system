@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import indexRoute from "./modules/index.route.mjs";
+import { errorHandler } from "./modules/midlleware/errorHandler.mjs";
 
 const App = express();
 const PORT = 9090;

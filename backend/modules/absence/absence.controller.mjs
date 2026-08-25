@@ -2,6 +2,7 @@ import Absence from "./absence.model.mjs";
 import Students from "../students/student.model.mjs";
 import HistoryStudent from "../history_student/history.model.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
+import { asyncHandler } from "../utils/asyncHandler.mjs";
 
 export const create = async (req, res) => {
   try {
@@ -12,25 +13,17 @@ export const create = async (req, res) => {
   }
 };
 
-export const uploadCsv = async (req, res) => {
+export const uploadCsv = asyncHandler(async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
-    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
+    throw new ValidationError("Empty Data!");
   }
 
   const dataCsv = req.body.data;
 
   let dataStudents;
   let dataHistoryStudent;
-  try {
-    dataStudents = await Students.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-  try {
-    dataHistoryStudent = await HistoryStudent.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  dataStudents = await Students.getAll();
+  dataHistoryStudent = await HistoryStudent.getAll();
 
   const dataToInsert = [];
   const notFound = [];
@@ -67,32 +60,15 @@ export const uploadCsv = async (req, res) => {
   }
 
   if (dataToInsert.length === 0) {
-    return errorResponse(res, {
-      message: "Tidak ada data yang cocok dengan referensi di database",
-      data: notFound,
-      statusCode: 404,
-    });
+    throw new ValidationError(
+      `Data not Match with database ${notFound}`,
+      notFound,
+    );
   }
 
-  try {
-    const inserted = await Absence.uploadCsv(dataToInsert);
-    return successResponse(res, { data: inserted, statusCode: 201 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
-
-export const viewDetail = async (req, res) => {
-  const className = req.query.className;
-  const levelName = req.query.levelName;
-  const classLevel = { levelName: levelName, className: className };
-  try {
-    const dataJoined = await Absence.viewDetail(classLevel);
-    return successResponse(res, { data: dataJoined });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const inserted = await Absence.uploadCsv(dataToInsert);
+  return successResponse(res, { data: inserted, statusCode: 201 });
+});
 
 export const getAll = async (req, res) => {
   try {
