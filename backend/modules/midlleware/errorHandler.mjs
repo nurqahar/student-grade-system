@@ -1,5 +1,5 @@
 import { handleDbError } from "../utils/handleDbError.mjs";
-import { errorRespones } from "../utils/response.mjs";
+import { errorResponse } from "../utils/response.mjs";
 
 export function errorHandler(error, req, res, next) {
   let appError = error;
@@ -11,7 +11,7 @@ export function errorHandler(error, req, res, next) {
   if (!appError.isOperational) {
   }
 
-  return errorRespones(res, {
+  return errorResponse(res, {
     message: appError.message,
     data: data,
     statusCode: appError.statusCode || 500,
