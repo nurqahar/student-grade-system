@@ -1,7 +1,6 @@
 import {
   AppError,
   ValidationError,
-  NotFoundError,
   ConflictError,
 } from "../errors/AppError.mjs";
 
