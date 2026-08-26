@@ -15,6 +15,6 @@ export function errorHandlerMiddleware(error, req, res, next) {
   return errorResponse(res, {
     message: appError.message,
     statusCode: appError.statusCode || 500,
-    errors: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    error: process.env.NODE_ENV === "development" ? error.stack : undefined,
   });
 }
