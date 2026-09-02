@@ -1,5 +1,5 @@
 import Level from "./level.model.mjs";
-import { successResponse, errorResponse } from "../utils/response.mjs";
+import { successResponse } from "../utils/response.mjs";
 import { csvParser } from "../utils/csvParser.mjs";
 import { NotFoundError, ValidationError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
