@@ -68,7 +68,7 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     const inserted = await Absence.uploadCsv(dataToInsert);
     return successResponse(res, { data: inserted, statusCode: 201 });
   } catch (error) {
-    throw new AppError("Failed to upload CSV", 500)
+    throw new AppError("Failed to upload CSV", 500);
   }
 });
 
