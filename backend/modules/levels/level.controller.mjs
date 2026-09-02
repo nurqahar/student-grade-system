@@ -11,12 +11,12 @@ export const create = asyncHandler(async (req, res) => {
 
 export const uploadCsv = asyncHandler(async (req, res) => {
   if (!req.file) {
-    throw new ValidationError("Empty Data!")
+    throw new ValidationError("Empty Data!");
   }
 
   const csvFile = await csvParser(req.file.buffer);
   if (!csvFile || csvFile.length === 0) {
-    throw new ValidationError("CSV File empty or has no data rows!")
+    throw new ValidationError("CSV File empty or has no data rows!");
   }
 
   const newLevel = await Level.uploadCsv(csvFile);
@@ -29,26 +29,26 @@ export const getAll = asyncHandler(async (req, res) => {
 });
 
 export const getById = asyncHandler(async (req, res) => {
-  if (!req.params.id) throw new NotFoundError("Please Input id first!")
+  if (!req.params.id) throw new NotFoundError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
   const data = await Level.getById({ id });
   return successResponse(res, { data: data });
 });
 
 export const update = asyncHandler(async (req, res) => {
-  if (!req.params.id) throw new NotFoundError("Please Input id first!")
+  if (!req.params.id) throw new NotFoundError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
   const dataId = Level.getById(id);
-  if (!dataId) throw new NotFoundError("Level Not Found!")
+  if (!dataId) throw new NotFoundError("Level Not Found!");
   const updated = await Level.update(id, req.body);
   return successResponse(res, { data: updated });
 });
 
 export const deleteData = asyncHandler(async (req, res) => {
-  if (!req.params.id) throw new NotFoundError("Please Input id first!")
+  if (!req.params.id) throw new NotFoundError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
   const dataId = Level.getById(id);
-  if (!dataId) throw new NotFoundError("Level Not Found!")
+  if (!dataId) throw new NotFoundError("Level Not Found!");
   const deleted = await Level.delete(id);
   return successResponse(res, { data: deleted, statusCode: 204 });
 });
