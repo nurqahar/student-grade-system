@@ -3,16 +3,12 @@ import Students from "../students/student.model.mjs";
 import HistoryStudent from "../history_student/history.model.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
-import { AppError, ValidationError } from "../errors/AppError.mjs";
+import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 
-export const create = async (req, res) => {
-  try {
-    const newAbsence = await Absence.create(req.body);
-    return successResponse(res, { data: newAbsence, statusCode: 201 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+export const create = asyncHandler(async (req, res) => {
+  const newAbsence = await Absence.create(req.body);
+  return successResponse(res, { data: newAbsence, statusCode: 201 });
+});
 
 export const uploadCsv = asyncHandler(async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
@@ -64,95 +60,44 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     throw new ValidationError(`Data not Match with database ${notFound}`);
   }
 
-  try {
-    const inserted = await Absence.uploadCsv(dataToInsert);
-    return successResponse(res, { data: inserted, statusCode: 201 });
-  } catch (error) {
-    throw new AppError("Failed to upload CSV", 500);
-  }
+  const inserted = await Absence.uploadCsv(dataToInsert);
+  return successResponse(res, { data: inserted, statusCode: 201 });
 });
 
-export const getAll = async (req, res) => {
-  try {
-    const data = await Absence.getAll();
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+export const getAll = asyncHandler(async (req, res) => {
+  const data = await Absence.getAll();
+  return successResponse(res, { data: data });
+});
 
-export const getById = async (req, res) => {
+export const getById = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
 
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  const data = await Absence.getById(id);
+  return successResponse(res, { data: data });
+});
 
-  try {
-    const data = await Absence.getById(id);
-
-    if (!data) {
-      return errorResponse(res, {
-        message: "Data not found!",
-        statusCode: 404,
-      });
-    }
-
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
-
-export const update = async (req, res) => {
+export const update = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
 
   const dataId = Absence.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (!dataId) throw new NotFoundError("ID Not Found!");
 
-  try {
-    const updated = await Absence.update(id, req.body);
-    return successResponse(res, { data: updated });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const updated = await Absence.update(id, req.body);
+  return successResponse(res, { data: updated });
+});
 
-export const deleteData = async (req, res) => {
+export const deleteData = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
 
   const dataId = await Absence.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (!dataId) throw new NotFoundError("ID Not Found!");
 
-  try {
-    const deleted = await Absence.delete(id);
-    return successResponse(res, { data: deleted, statusCode: 204 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const deleted = await Absence.delete(id);
+  return successResponse(res, { data: deleted, statusCode: 204 });
+});

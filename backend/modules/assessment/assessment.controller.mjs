@@ -4,20 +4,17 @@ import Subjects from "../subjects/subject.model.mjs";
 import Students from "../students/student.model.mjs";
 import Classes from "../classes/class.model.mjs";
 import { errorResponse, successResponse } from "../utils/response.mjs";
+import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
+import { asyncHandler } from "../utils/asyncHandler.mjs";
 
-export const create = async (req, res) => {
-  try {
-    const newAssessment = await Assessment.create(req.body);
-    return successResponse(res, { data: newAssessment, statusCode: 201 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+export const create = asyncHandler(async (req, res) => {
+  const newAssessment = await Assessment.create(req.body);
+  return successResponse(res, { data: newAssessment, statusCode: 201 });
+});
 
-export const uploadCsv = async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) {
-    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
-  }
+export const uploadCsv = asyncHandler(async (req, res) => {
+  if (!req.body.data || req.body.data.length === 0)
+    throw new ValidationError("Empty Data!");
 
   const dataCsv = req.body.data;
 
@@ -27,26 +24,10 @@ export const uploadCsv = async (req, res) => {
   let dataSubjects;
   let dataHistoryStudent;
 
-  try {
-    dataStudents = await Students.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-  try {
-    dataClasses = await Classes.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-  try {
-    dataSubjects = await Subjects.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-  try {
-    dataHistoryStudent = await HistoryStudent.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  dataStudents = await Students.getAll();
+  dataClasses = await Classes.getAll();
+  dataSubjects = await Subjects.getAll();
+  dataHistoryStudent = await HistoryStudent.getAll();
 
   const dataToInsert = [];
   const notFound = [];
@@ -94,134 +75,66 @@ export const uploadCsv = async (req, res) => {
     });
   }
 
-  if (dataToInsert.length === 0) {
-    return errorResponse(res, {
-      message: "Tidak ada data yang cocok dengan referensi di database",
-      data: notFound,
-      statusCode: 404,
-    });
-  }
+  if (dataToInsert.length === 0)
+    throw new ValidationError("Unmatch with reference in table");
+  const inserted = await Assessment.uploadCsv(dataToInsert);
+  return successResponse(res, { data: inserted, statusCode: 201 });
+});
 
-  try {
-    const inserted = await Assessment.uploadCsv(dataToInsert);
-    return successResponse(res, { data: inserted, statusCode: 201 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
-
-export const viewDetail = async (req, res) => {
+export const viewDetail = asyncHandler(async (req, res) => {
   const className = req.query.className;
   const levelName = req.query.levelName;
   const classLevel = { levelName: levelName, className: className };
-  try {
-    const data = await Assessment.viewDetail(classLevel);
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const data = await Assessment.viewDetail(classLevel);
+  return successResponse(res, { data: data });
+});
 
-export const getAllJoined = async (req, res) => {
-  try {
-    const dataJoined = await Assessment.getAllJoined();
-    return successResponse(res, { data: dataJoined });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+export const getAllJoined = asyncHandler(async (req, res) => {
+  const dataJoined = await Assessment.getAllJoined();
+  return successResponse(res, { data: dataJoined });
+});
 
-export const getAll = async (req, res) => {
-  try {
-    const data = await Assessment.getAll();
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+export const getAll = asyncHandler(async (req, res) => {
+  const data = await Assessment.getAll();
+  return successResponse(res, { data: data });
+});
 
-export const getById = async (req, res) => {
+export const getById = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
 
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  if (isNaN(id) || id <= 0) throw new NotFoundError("ID Not Found!");
+  const data = await Assessment.getById(id);
+  return successResponse(res, { data: data });
+});
 
-  try {
-    const data = await Assessment.getById(id);
-
-    if (!data) {
-      return errorResponse(res, {
-        message: "Data not found!",
-        statusCode: 404,
-      });
-    }
-
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
-
-export const getByIdJoined = async (req, res) => {
+export const getByIdJoined = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  try {
-    const data = await Assessment.getByIdJoined(id);
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const data = await Assessment.getByIdJoined(id);
+  return successResponse(res, { data: data });
+});
 
-export const update = async (req, res) => {
+export const update = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
 
   const dataId = await Assessment.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (!dataId) throw new NotFoundError("ID Not Found!");
 
-  try {
-    const updated = await Assessment.update(id, req.body);
-    return res.status(200).json(updated);
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const updated = await Assessment.update(id, req.body);
+  return res.status(200).json(updated);
+});
 
-export const deleteData = async (req, res) => {
+export const deleteData = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
 
   const dataId = Assessment.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (!dataId) throw new NotFoundError("ID Not Found!");
 
-  try {
-    const deleted = await Assessment.delete(id);
-    return successResponse(res, { data: deleted, statusCode: 204 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const deleted = await Assessment.delete(id);
+  return successResponse(res, { data: deleted, statusCode: 204 });
+});

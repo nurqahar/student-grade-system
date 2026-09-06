@@ -1,7 +1,9 @@
 import Students from "./student.model.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
+import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
+import { asyncHandler } from "../utils/asyncHandler.mjs";
 
-export const create = async (req, res) => {
+export const create = asyncHandler(async (req, res) => {
   const class_id = parseInt(req.params.class_id, 10);
 
   try {
@@ -10,9 +12,9 @@ export const create = async (req, res) => {
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
-};
+});
 
-export const uploadCsv = async (req, res) => {
+export const uploadCsv = asyncHandler(async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
     return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
   }
@@ -23,18 +25,18 @@ export const uploadCsv = async (req, res) => {
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
-};
+});
 
-export const getAll = async (req, res) => {
+export const getAll = asyncHandler(async (req, res) => {
   try {
     const data = await Students.getAll();
     return successResponse(res, { data: data });
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
-};
+});
 
-export const getById = async (req, res) => {
+export const getById = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   try {
     const data = await Students.getById(id);
@@ -42,9 +44,9 @@ export const getById = async (req, res) => {
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
-};
+});
 
-export const update = async (req, res) => {
+export const update = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const dataId = Students.getById(id);
   if (!dataId)
@@ -60,9 +62,9 @@ export const update = async (req, res) => {
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
-};
+});
 
-export const deleteData = async (req, res) => {
+export const deleteData = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (!id)
     return errorResponse(res, {
@@ -76,4 +78,4 @@ export const deleteData = async (req, res) => {
   } catch (error) {
     return errorResponse(res, { errors: error });
   }
-};
+});

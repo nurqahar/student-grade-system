@@ -1,17 +1,15 @@
 import Classes from "./class.model.mjs";
 import Levels from "../levels/level.model.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
+import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
+import { asyncHandler } from "../utils/asyncHandler.mjs";
 
-export const create = async (req, res) => {
-  try {
-    const newClasses = await Classes.create(req.body);
-    return successResponse(res, { data: newClasses, statusCode: 201 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+export const create = asyncHandler(async (req, res) => {
+  const newClasses = await Classes.create(req.body);
+  return successResponse(res, { data: newClasses, statusCode: 201 });
+});
 
-export const uploadCsv = async (req, res) => {
+export const uploadCsv = asyncHandler(async (req, res) => {
   if (!req.body.data || req.body.data.length === 0) {
     return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
   }
@@ -52,33 +50,21 @@ export const uploadCsv = async (req, res) => {
     });
   }
 
-  try {
-    const inserted = await Classes.uploadCsv(dataToInsert);
-    return successResponse(res, { data: inserted, statusCode: 201 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const inserted = await Classes.uploadCsv(dataToInsert);
+  return successResponse(res, { data: inserted, statusCode: 201 });
+});
 
 export const viewDetail = async (req, res) => {
-  try {
-    const data = await Classes.viewDetail();
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  const data = await Classes.viewDetail();
+  return successResponse(res, { data: data });
 };
 
 export const getAll = async (req, res) => {
-  try {
-    const data = await Classes.getAll();
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  const data = await Classes.getAll();
+  return successResponse(res, { data: data });
 };
 
-export const getById = async (req, res) => {
+export const getById = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
 
   if (isNaN(id) || id <= 0) {
@@ -88,23 +74,19 @@ export const getById = async (req, res) => {
     });
   }
 
-  try {
-    const data = await Classes.getById(id);
+  const data = await Classes.getById(id);
 
-    if (!data) {
-      return errorResponse(res, {
-        message: "Data not found!",
-        statusCode: 404,
-      });
-    }
-
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
+  if (!data) {
+    return errorResponse(res, {
+      message: "Data not found!",
+      statusCode: 404,
+    });
   }
-};
 
-export const update = async (req, res) => {
+  return successResponse(res, { data: data });
+});
+
+export const update = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) {
     return errorResponse(res, {
@@ -121,15 +103,11 @@ export const update = async (req, res) => {
       data: null,
     });
 
-  try {
-    const updated = await Classes.update(id, req.body);
-    return successResponse(res, { data: updated });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const updated = await Classes.update(id, req.body);
+  return successResponse(res, { data: updated });
+});
 
-export const deleteData = async (req, res) => {
+export const deleteData = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) {
     return errorResponse(res, {
@@ -146,10 +124,6 @@ export const deleteData = async (req, res) => {
       data: null,
     });
 
-  try {
-    const deleted = await Classes.delete(id);
-    return successResponse(res, { data: deleted, statusCode: 204 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-};
+  const deleted = await Classes.delete(id);
+  return successResponse(res, { data: deleted, statusCode: 204 });
+});

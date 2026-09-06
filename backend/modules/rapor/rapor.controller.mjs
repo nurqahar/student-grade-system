@@ -8,6 +8,8 @@ import {
   splitClassLevel,
 } from "./rapor.service.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
+import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
+import { asyncHandler } from "../utils/asyncHandler.mjs";
 
 function buildFileName(data) {
   return `Rapor_${data.number}_${data.nis}_${data.studentName}_${data.classLevel}.pdf`;
@@ -15,7 +17,7 @@ function buildFileName(data) {
 // POST /api/rapor/printZip
 // body: { classLevel, schoolYear?, semester?, raporDate, headmasterName }
 // -> 1 file .zip berisi PDF rapor tiap siswa di kelas tsb.
-export const printZip = async (req, res) => {
+export const printZip = asyncHandler(async (req, res) => {
   const { classLevel, schoolYear, semester, raporDate, headmasterName } =
     req.body;
 
@@ -69,12 +71,12 @@ export const printZip = async (req, res) => {
   } finally {
     if (browser) await browser.close();
   }
-};
+});
 
 // POST /api/rapor/printCombined
 // body: { classLevel, schoolYear?, semester?, raporDate, headmasterName }
 // -> 1 file .pdf gabungan berisi rapor semua siswa di kelas tsb.
-export const printCombined = async (req, res) => {
+export const printCombined = asyncHandler(async (req, res) => {
   const { classLevel, schoolYear, semester, raporDate, headmasterName } =
     req.body;
 
@@ -134,11 +136,11 @@ export const printCombined = async (req, res) => {
   } finally {
     if (browser) await browser.close();
   }
-};
+});
 
 // GET /api/rapor/printStudent/:historyId?raporDate=...&headmasterName=...
 // -> 1 file .pdf untuk satu siswa, ditampilkan inline (preview di tab baru).
-export const printStudent = async (req, res) => {
+export const printStudent = asyncHandler(async (req, res) => {
   const historyId = parseInt(req.params.historyId, 10);
   const { raporDate, headmasterName } = req.query;
 
@@ -181,4 +183,4 @@ export const printStudent = async (req, res) => {
   } finally {
     if (browser) await browser.close();
   }
-};
+});

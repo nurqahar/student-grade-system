@@ -29,14 +29,14 @@ export const getAll = asyncHandler(async (req, res) => {
 });
 
 export const getById = asyncHandler(async (req, res) => {
-  if (!req.params.id) throw new NotFoundError("Please Input id first!");
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
   const data = await Level.getById({ id });
   return successResponse(res, { data: data });
 });
 
 export const update = asyncHandler(async (req, res) => {
-  if (!req.params.id) throw new NotFoundError("Please Input id first!");
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
   const dataId = Level.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
@@ -45,7 +45,7 @@ export const update = asyncHandler(async (req, res) => {
 });
 
 export const deleteData = asyncHandler(async (req, res) => {
-  if (!req.params.id) throw new NotFoundError("Please Input id first!");
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
   const dataId = Level.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
