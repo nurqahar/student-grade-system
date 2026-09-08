@@ -1,6 +1,6 @@
 import Classes from "./class.model.mjs";
 import Levels from "../levels/level.model.mjs";
-import { successResponse, errorResponse } from "../utils/response.mjs";
+import { successResponse } from "../utils/response.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 
@@ -10,18 +10,13 @@ export const create = asyncHandler(async (req, res) => {
 });
 
 export const uploadCsv = asyncHandler(async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) {
-    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
-  }
+  if (!req.body.data || req.body.data.length === 0)
+    throw new ValidationError("Empty Data!");
 
   const dataCsv = req.body.data;
 
   let dataLevels;
-  try {
-    dataLevels = await Levels.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  dataLevels = await Levels.getAll();
 
   const dataToInsert = [];
   const notFound = [];
@@ -42,13 +37,8 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     });
   }
 
-  if (dataToInsert.length === 0) {
-    return errorResponse(res, {
-      message: "Tidak ada data yang cocok dengan referensi di database",
-      data: notFound,
-      statusCode: 404,
-    });
-  }
+  if (dataToInsert.length === 0)
+    throw new ValidationError("Unmatch with reference in table");
 
   const inserted = await Classes.uploadCsv(dataToInsert);
   return successResponse(res, { data: inserted, statusCode: 201 });
@@ -65,43 +55,20 @@ export const getAll = async (req, res) => {
 };
 
 export const getById = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
 
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
-
   const data = await Classes.getById(id);
-
-  if (!data) {
-    return errorResponse(res, {
-      message: "Data not found!",
-      statusCode: 404,
-    });
-  }
-
   return successResponse(res, { data: data });
 });
 
 export const update = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = Classes.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (!dataId) throw new NotFoundError("ID Not Found!");
 
   const updated = await Classes.update(id, req.body);
   return successResponse(res, { data: updated });
@@ -109,20 +76,10 @@ export const update = asyncHandler(async (req, res) => {
 
 export const deleteData = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) {
-    return errorResponse(res, {
-      message: "ID tidak valid!",
-      statusCode: 400,
-    });
-  }
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = await Classes.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (!dataId) throw new NotFoundError("ID Not Found!");
 
   const deleted = await Classes.delete(id);
   return successResponse(res, { data: deleted, statusCode: 204 });

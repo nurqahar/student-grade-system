@@ -6,24 +6,18 @@ import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 
 export const create = asyncHandler(async (req, res) => {
-  try {
-    const { subject_type, order, competency_achievement, class_id } = req.body;
-    const newSubject = await Subject.create({
-      subject_type,
-      order,
-      competency_achievement,
-      class_id,
-    });
-    return successResponse(res, { data: newSubject, statusCode: 201 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  const { subject_type, order, competency_achievement, class_id } = req.body;
+  const newSubject = await Subject.create({
+    subject_type,
+    order,
+    competency_achievement,
+    class_id,
+  });
+  return successResponse(res, { data: newSubject, statusCode: 201 });
 });
 
 export const uploadCsv = asyncHandler(async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) {
-    return errorResponse(res, { message: "Empty Data!", statusCode: 400 });
-  }
+  if (!req.body.data || req.body.data.length === 0) return errorResponse(res, { message: "Empty Data!", statusCode: 400 })
 
   const dataCsv = req.body.data;
 
@@ -69,77 +63,51 @@ export const uploadCsv = asyncHandler(async (req, res) => {
       class_id: foundClass.id,
     });
 
-    if (dataToInsert.length === 0) {
-      return errorResponse(res, {
-        message: "Tidak ada data yang cocok dengan referensi di database",
-        data: notFound,
-        statusCode: 404,
-      });
-    }
+    if (dataToInsert.length === 0)
+      throw new ValidationError("Unmatch with reference in table");
 
-    try {
-      const inserted = await Subject.uploadCsv(dataToInsert);
-      return successResponse(res, {
-        data: inserted,
-        statusCode: 201,
-      });
-    } catch (error) {
-      return errorResponse(res, { errors: error });
-    }
+    const inserted = await Subject.uploadCsv(dataToInsert);
+    return successResponse(res, {
+      data: inserted,
+      statusCode: 201,
+    });
   }
 });
 
 export const getAll = asyncHandler(async (req, res) => {
-  try {
-    const data = await Subject.getAll();
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  const data = await Subject.getAll();
+  return successResponse(res, { data: data });
 });
 
 export const getById = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  try {
-    const data = await Subject.getById({ id });
-    return successResponse(res, { data: data });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+
+  const data = await Subject.getById({ id });
+  return successResponse(res, { data: data });
 });
 
 export const update = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  const dataId = Subject.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  try {
-    const updated = await Subject.update(id, req.body);
-    return successResponse(res, { data: updated });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  const dataId = Subject.getById(id);
+  if (!dataId) throw new NotFoundError("Level Not Found!");
+
+  const updated = await Subject.update(id, req.body);
+  return successResponse(res, { data: updated });
 });
 
 export const deleteData = asyncHandler(async (req, res) => {
+  if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  const dataId = Subject.getById(id);
-  if (!dataId)
-    return errorResponse(res, {
-      message: "id Not Found!",
-      statusCode: 404,
-      data: null,
-    });
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  try {
-    const deleted = await Subject.delete(id);
-    return successResponse(res, { data: deleted, statusCode: 204 });
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  const dataId = Subject.getById(id);
+  if (!dataId) throw new NotFoundError("Level Not Found!");
+
+  const deleted = await Subject.delete(id);
+  return successResponse(res, { data: deleted, statusCode: 204 });
 });

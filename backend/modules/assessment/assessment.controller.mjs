@@ -3,7 +3,7 @@ import HistoryStudent from "../history_student/history.model.mjs";
 import Subjects from "../subjects/subject.model.mjs";
 import Students from "../students/student.model.mjs";
 import Classes from "../classes/class.model.mjs";
-import { errorResponse, successResponse } from "../utils/response.mjs";
+import { successResponse } from "../utils/response.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 
@@ -118,7 +118,7 @@ export const getByIdJoined = asyncHandler(async (req, res) => {
 export const update = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = await Assessment.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");
@@ -130,7 +130,7 @@ export const update = asyncHandler(async (req, res) => {
 export const deleteData = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = Assessment.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");

@@ -1,7 +1,7 @@
 import Absence from "./absence.model.mjs";
 import Students from "../students/student.model.mjs";
 import HistoryStudent from "../history_student/history.model.mjs";
-import { successResponse, errorResponse } from "../utils/response.mjs";
+import { successResponse } from "../utils/response.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 
@@ -11,9 +11,7 @@ export const create = asyncHandler(async (req, res) => {
 });
 
 export const uploadCsv = asyncHandler(async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) {
-    throw new ValidationError("Empty Data!");
-  }
+  if (!req.body.data || req.body.data.length === 0) throw new ValidationError("Empty Data!");
 
   const dataCsv = req.body.data;
 
@@ -72,8 +70,6 @@ export const getAll = asyncHandler(async (req, res) => {
 export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
-
   const data = await Absence.getById(id);
   return successResponse(res, { data: data });
 });
@@ -81,7 +77,7 @@ export const getById = asyncHandler(async (req, res) => {
 export const update = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = Absence.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");
@@ -93,7 +89,7 @@ export const update = asyncHandler(async (req, res) => {
 export const deleteData = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Invalid ID!");
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = await Absence.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");

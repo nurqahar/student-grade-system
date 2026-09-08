@@ -38,6 +38,8 @@ export const getById = asyncHandler(async (req, res) => {
 export const update = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+
   const dataId = Level.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
   const updated = await Level.update(id, req.body);
@@ -46,7 +48,10 @@ export const update = asyncHandler(async (req, res) => {
 
 export const deleteData = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
+
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+
   const dataId = Level.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
   const deleted = await Level.delete(id);
