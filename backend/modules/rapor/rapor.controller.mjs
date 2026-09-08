@@ -8,7 +8,6 @@ import {
   splitClassLevel,
 } from "./rapor.service.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
-import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 
 function buildFileName(data) {
@@ -31,46 +30,40 @@ export const printZip = asyncHandler(async (req, res) => {
   const { levelName, className } = splitClassLevel(classLevel);
   let browser;
 
-  try {
-    const studentsData = await getClassRaporData({
-      levelName,
-      className,
-      schoolYear,
-      semester,
-      raporDate,
-      headmasterName,
-    });
+  const studentsData = await getClassRaporData({
+    levelName,
+    className,
+    schoolYear,
+    semester,
+    raporDate,
+    headmasterName,
+  });
 
-    if (!studentsData.length) {
-      return errorResponse(res, {
-        message: "Tidak ada data siswa untuk kelas ini",
-        statusCode: 404,
-      });
-    }
-
-    browser = await puppeteer.launch();
-    const zip = new JSZip();
-
-    for (const data of studentsData) {
-      const buffer = await renderPdfBuffer(data, browser);
-      zip.file(buildFileName(data), buffer);
-    }
-
-    const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-
-    res.setHeader("Content-Type", "application/zip");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="Rapor_${classLevel.replace(/\s+/g, "_")}.zip"`,
-    );
-    return res.send(zipBuffer);
-  } catch (error) {
+  if (!studentsData.length) {
     return errorResponse(res, {
-      errors: error,
+      message: "Tidak ada data siswa untuk kelas ini",
+      statusCode: 404,
     });
-  } finally {
-    if (browser) await browser.close();
   }
+
+  browser = await puppeteer.launch();
+  const zip = new JSZip();
+
+  for (const data of studentsData) {
+    const buffer = await renderPdfBuffer(data, browser);
+    zip.file(buildFileName(data), buffer);
+  }
+
+  const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+
+  res.setHeader("Content-Type", "application/zip");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="Rapor_${classLevel.replace(/\s+/g, "_")}.zip"`,
+  );
+
+  if (browser) await browser.close();
+  return res.send(zipBuffer);
 });
 
 // POST /api/rapor/printCombined
@@ -90,52 +83,46 @@ export const printCombined = asyncHandler(async (req, res) => {
   const { levelName, className } = splitClassLevel(classLevel);
   let browser;
 
-  try {
-    const studentsData = await getClassRaporData({
-      levelName,
-      className,
-      schoolYear,
-      semester,
-      raporDate,
-      headmasterName,
-    });
+  const studentsData = await getClassRaporData({
+    levelName,
+    className,
+    schoolYear,
+    semester,
+    raporDate,
+    headmasterName,
+  });
 
-    if (!studentsData.length) {
-      return errorResponse(res, {
-        message: "Tidak ada data siswa untuk kelas ini",
-        statusCode: 404,
-      });
-    }
-
-    browser = await puppeteer.launch();
-    const mergedPdf = await PDFDocument.create();
-
-    for (const data of studentsData) {
-      const buffer = await renderPdfBuffer(data, browser);
-      const studentPdf = await PDFDocument.load(buffer);
-      const copiedPages = await mergedPdf.copyPages(
-        studentPdf,
-        studentPdf.getPageIndices(),
-      );
-      copiedPages.forEach((page) => mergedPdf.addPage(page));
-    }
-
-    const mergedBuffer = await mergedPdf.save();
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="Rapor_${classLevel.replace(/\s+/g, "_")}_gabungan.pdf"`,
-    );
-    return res.send(Buffer.from(mergedBuffer));
-  } catch (error) {
-    console.error(error);
+  if (!studentsData.length) {
     return errorResponse(res, {
-      errors: error,
+      message: "Tidak ada data siswa untuk kelas ini",
+      statusCode: 404,
     });
-  } finally {
-    if (browser) await browser.close();
   }
+
+  browser = await puppeteer.launch();
+  const mergedPdf = await PDFDocument.create();
+
+  for (const data of studentsData) {
+    const buffer = await renderPdfBuffer(data, browser);
+    const studentPdf = await PDFDocument.load(buffer);
+    const copiedPages = await mergedPdf.copyPages(
+      studentPdf,
+      studentPdf.getPageIndices(),
+    );
+    copiedPages.forEach((page) => mergedPdf.addPage(page));
+  }
+
+  const mergedBuffer = await mergedPdf.save();
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="Rapor_${classLevel.replace(/\s+/g, "_")}_gabungan.pdf"`,
+  );
+
+  if (browser) await browser.close();
+
+  return res.send(Buffer.from(mergedBuffer));
 });
 
 // GET /api/rapor/printStudent/:historyId?raporDate=...&headmasterName=...
@@ -152,35 +139,29 @@ export const printStudent = asyncHandler(async (req, res) => {
   }
 
   let browser;
-  try {
-    const data = await getStudentRaporData({
-      historyId,
-      raporDate,
-      headmasterName,
-    });
+  const data = await getStudentRaporData({
+    historyId,
+    raporDate,
+    headmasterName,
+  });
 
-    if (!data) {
-      return errorResponse(res, {
-        message: "Data nilai siswa tidak ditemukan",
-        statusCode: 404,
-      });
-    }
-
-    browser = await puppeteer.launch();
-    const buffer = await renderPdfBuffer(data, browser);
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `inline; filename="${buildFileName(data)}"`,
-    );
-    return res.send(buffer);
-  } catch (error) {
-    console.error(error);
+  if (!data) {
     return errorResponse(res, {
-      errors: error,
+      message: "Data nilai siswa tidak ditemukan",
+      statusCode: 404,
     });
-  } finally {
-    if (browser) await browser.close();
   }
+
+  browser = await puppeteer.launch();
+  const buffer = await renderPdfBuffer(data, browser);
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `inline; filename="${buildFileName(data)}"`,
+  );
+
+  if (browser) await browser.close();
+
+  return res.send(buffer);
 });
