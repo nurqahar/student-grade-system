@@ -3,7 +3,6 @@ import { successResponse } from "../utils/response.mjs";
 import { csvParser } from "../utils/csvParser.mjs";
 import { NotFoundError, ValidationError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
-import { csvParser } from "../utils/csvParser.mjs";
 
 export const create = asyncHandler(async (req, res) => {
   const newLevel = await Level.create(req.body);
