@@ -11,11 +11,12 @@ import {
 import { errorResponse } from "../utils/response.mjs";
 
 const router = express.Router();
+
 const storageBuffer = multer.memoryStorage();
 const upload = multer({
   storage: storageBuffer,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype !== "text/csv" && !file.originalname.endsWith(".csv")) {
+    if (file.mimetype !== "text/csv" || !file.originalname.endsWith(".csv")) {
       return cb(new Error("Only CSV files are allowed!"));
     }
     cb(null, true);

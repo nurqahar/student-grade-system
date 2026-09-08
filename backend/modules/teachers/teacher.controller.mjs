@@ -1,7 +1,8 @@
 import Teacher from "./teacher.model.mjs";
-import { successResponse, errorResponse } from "../utils/response.mjs";
+import { successResponse } from "../utils/response.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
+import { csvParser } from "../utils/csvParser.mjs";
 
 export const create = asyncHandler(async (req, res) => {
   const newTeacher = await Teacher.create(req.body);
@@ -9,9 +10,12 @@ export const create = asyncHandler(async (req, res) => {
 });
 
 export const uploadCsv = asyncHandler(async (req, res) => {
+  if (!req.file) throw new ValidationError("Empty Data!");
 
-  if (!req.body.data || req.body.data.length === 0) return errorResponse(res, { message: "Empty Data!", statusCode: 400 })
-  const newTeacher = await Teacher.uploadCsv(req.body.data);
+  const dataCsv = await csvParser(req.file.buffer);
+  if (!dataCsv || dataCsv.length === 0) throw new ValidationError("CSV File empty or has no data rows!");
+
+  const newTeacher = await Teacher.uploadCsv(dataCsv);
   return successResponse(res, { data: newTeacher, statusCode: 201 });
 });
 

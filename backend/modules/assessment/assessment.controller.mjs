@@ -6,6 +6,7 @@ import Classes from "../classes/class.model.mjs";
 import { successResponse } from "../utils/response.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
+import { csvParser } from "../utils/csvParser.mjs";
 
 export const create = asyncHandler(async (req, res) => {
   const newAssessment = await Assessment.create(req.body);
@@ -13,10 +14,10 @@ export const create = asyncHandler(async (req, res) => {
 });
 
 export const uploadCsv = asyncHandler(async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0)
-    throw new ValidationError("Empty Data!");
+  if (!req.file) throw new ValidationError("Empty Data!");
 
-  const dataCsv = req.body.data;
+  const dataCsv = await csvParser(req.file.buffer);
+  if (!dataCsv || dataCsv.length === 0) throw new ValidationError("CSV File empty or has no data rows!");
 
   // ambil semua data referensi dari db untuk mencocokkan FK
   let dataStudents;

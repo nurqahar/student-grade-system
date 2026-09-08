@@ -4,6 +4,7 @@ import Levels from "../levels/level.model.mjs";
 import { successResponse, errorResponse } from "../utils/response.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
+import { csvParser } from "../utils/csvParser.mjs";
 
 export const create = asyncHandler(async (req, res) => {
   const { subject_type, order, competency_achievement, class_id } = req.body;
@@ -17,9 +18,10 @@ export const create = asyncHandler(async (req, res) => {
 });
 
 export const uploadCsv = asyncHandler(async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) return errorResponse(res, { message: "Empty Data!", statusCode: 400 })
+  if (!req.file) throw new ValidationError("Empty Data!");
 
-  const dataCsv = req.body.data;
+  const dataCsv = await csvParser(req.file.buffer);
+  if (!dataCsv || dataCsv.length === 0) throw new ValidationError("CSV File empty or has no data rows!");
 
   let dataClasses;
   let dataLevels;

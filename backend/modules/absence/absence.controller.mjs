@@ -4,6 +4,7 @@ import HistoryStudent from "../history_student/history.model.mjs";
 import { successResponse } from "../utils/response.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
+import { csvParser } from "../utils/csvParser.mjs";
 
 export const create = asyncHandler(async (req, res) => {
   const newAbsence = await Absence.create(req.body);
@@ -11,9 +12,10 @@ export const create = asyncHandler(async (req, res) => {
 });
 
 export const uploadCsv = asyncHandler(async (req, res) => {
-  if (!req.body.data || req.body.data.length === 0) throw new ValidationError("Empty Data!");
+  if (!req.file) throw new ValidationError("Empty Data!");
 
-  const dataCsv = req.body.data;
+  const dataCsv = await csvParser(req.file.buffer);
+  if (!dataCsv || dataCsv.length === 0) throw new ValidationError("CSV File empty or has no data rows!");
 
   let dataStudents;
   let dataHistoryStudent;
