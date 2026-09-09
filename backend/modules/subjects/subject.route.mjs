@@ -11,6 +11,7 @@ import {
 } from "./subject.controller.mjs";
 
 const router = express.Router();
+const storageBuffer = multer.memoryStorage();
 const upload = multer({
   storage: storageBuffer,
   fileFilter: (req, file, cb) => {
