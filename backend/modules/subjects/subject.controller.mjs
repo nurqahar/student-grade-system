@@ -60,11 +60,12 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     if (dataToInsert.length === 0)
       throw new ValidationError("Unmatch with reference in table");
 
-    const inserted = await Subject.uploadCsv(dataToInsert);
-    return successResponse(res, {
-      data: inserted,
-      statusCode: 201,
-    });
+    console.log(dataToInsert)
+    //const inserted = await Subject.uploadCsv(dataToInsert);
+    //return successResponse(res, {
+    //  data: inserted,
+    //  statusCode: 201,
+    //});
   }
 });
 
@@ -78,7 +79,7 @@ export const getById = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const data = await Subject.getById({ id });
+  const data = await Subject.getById(id);
   return successResponse(res, { data: data });
 });
 

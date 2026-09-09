@@ -29,7 +29,7 @@ export const getById = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const data = await Teacher.getById({ id });
+  const data = await Teacher.getById(id);
   return successResponse(res, { data: data });
 });
 

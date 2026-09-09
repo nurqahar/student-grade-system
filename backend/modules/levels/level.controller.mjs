@@ -27,7 +27,7 @@ export const getAll = asyncHandler(async (req, res) => {
 export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  const data = await Level.getById({ id });
+  const data = await Level.getById(id);
   return successResponse(res, { data: data });
 });
 
