@@ -1,5 +1,5 @@
 import Students from "./student.model.mjs";
-import { successResponse, errorResponse } from "../utils/response.mjs";
+import { successResponse } from "../utils/response.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 import { csvParser } from "../utils/csvParser.mjs";

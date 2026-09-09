@@ -1,7 +1,7 @@
 import Subject from "./subject.model.mjs";
 import Classes from "../classes/class.model.mjs";
 import Levels from "../levels/level.model.mjs";
-import { successResponse, errorResponse } from "../utils/response.mjs";
+import { successResponse } from "../utils/response.mjs";
 import { ValidationError, NotFoundError } from "../errors/AppError.mjs";
 import { asyncHandler } from "../utils/asyncHandler.mjs";
 import { csvParser } from "../utils/csvParser.mjs";
@@ -26,16 +26,8 @@ export const uploadCsv = asyncHandler(async (req, res) => {
   let dataClasses;
   let dataLevels;
   let foundLevel;
-  try {
-    dataLevels = await Levels.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
-  try {
-    dataClasses = await Classes.getAll();
-  } catch (error) {
-    return errorResponse(res, { errors: error });
-  }
+  dataLevels = await Levels.getAll();
+  dataClasses = await Classes.getAll();
 
   const dataToInsert = [];
   const notFound = [];
