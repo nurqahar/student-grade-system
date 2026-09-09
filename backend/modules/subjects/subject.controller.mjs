@@ -28,6 +28,8 @@ export const uploadCsv = asyncHandler(async (req, res) => {
   let foundLevel;
   dataLevels = await Levels.getAll();
   dataClasses = await Classes.getAll();
+  if (!dataLevels) throw NotFoundError("Data Levels Doesn't Exist")
+  if (!dataClasses) throw NotFoundError("Data Classes Doesn't Exist")
 
   const dataToInsert = [];
   const notFound = [];
@@ -57,16 +59,16 @@ export const uploadCsv = asyncHandler(async (req, res) => {
       class_id: foundClass.id,
     });
 
-    if (dataToInsert.length === 0)
-      throw new ValidationError("Unmatch with reference in table");
 
-    console.log(dataToInsert)
-    //const inserted = await Subject.uploadCsv(dataToInsert);
-    //return successResponse(res, {
-    //  data: inserted,
-    //  statusCode: 201,
-    //});
   }
+
+  if (dataToInsert.length === 0) throw new ValidationError(`Data not Match with database ${notFound}`);
+
+  const inserted = await Subject.uploadCsv(dataToInsert);
+  return successResponse(res, {
+    data: inserted,
+    statusCode: 201,
+  });
 });
 
 export const getAll = asyncHandler(async (req, res) => {
