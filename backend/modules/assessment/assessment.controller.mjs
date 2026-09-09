@@ -76,8 +76,7 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     });
   }
 
-  if (dataToInsert.length === 0)
-    throw new ValidationError("Unmatch with reference in table");
+  if (dataToInsert.length === 0) throw new ValidationError(`Data not Match with database ${notFound}`);
   const inserted = await Assessment.uploadCsv(dataToInsert);
   return successResponse(res, { data: inserted, statusCode: 201 });
 });
