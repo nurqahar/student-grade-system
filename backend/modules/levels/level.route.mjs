@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import { ValidationError } from "../errors/AppError.mjs";
 import {
   create,
   uploadCsv,
@@ -8,7 +9,6 @@ import {
   update,
   deleteData,
 } from "./level.controller.mjs";
-import { errorResponse } from "../utils/response.mjs";
 
 const router = express.Router();
 
@@ -33,10 +33,10 @@ router.delete("/:id", deleteData);
 
 router.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
-    return errorResponse(res, { message: error.message, statusCode: 400 });
+    throw new ValidationError(error.message)
   }
   if (error) {
-    return errorResponse(res, { message: error.message, statusCode: 400 });
+    throw new ValidationError(error.message)
   }
   next();
 });
