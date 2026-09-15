@@ -102,9 +102,10 @@ export const getAll = asyncHandler(async (req, res) => {
 export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  if (isNaN(id) || id <= 0) throw new NotFoundError("ID Not Found!");
   const data = await Assessment.getById(id);
+  if (!data) throw new NotFoundError("Assessment Not Found!")
   return successResponse(res, { data: data });
 });
 
@@ -132,7 +133,7 @@ export const deleteData = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const dataId = Assessment.getById(id);
+  const dataId = await Assessment.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");
 
   const deleted = await Assessment.delete(id);

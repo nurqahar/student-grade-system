@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.mjs";
 import { csvParser } from "../utils/csvParser.mjs";
 
 export const create = asyncHandler(async (req, res) => {
-  const created = Students.create(req.body);
+  const created = await Students.create(req.body);
   return successResponse(res, { data: created, statusCode: 201 });
 });
 
@@ -29,7 +29,9 @@ export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+
   const data = await Students.getById(id);
+  if (!data) throw new NotFoundError("Student Not Found!")
   return successResponse(res, { data: data });
 });
 
@@ -38,7 +40,7 @@ export const update = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const dataId = Students.getById(id);
+  const dataId = await Students.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
 
   const data = await Students.update(id, req.body);
@@ -50,7 +52,7 @@ export const deleteData = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const dataId = Students.getById(id);
+  const dataId = await Students.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
 
   const data = await Students.delete(id);

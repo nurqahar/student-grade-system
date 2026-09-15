@@ -58,8 +58,10 @@ export const getAll = async (req, res) => {
 export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const data = await Classes.getById(id);
+  if (!data) throw new NotFoundError("Class Not Found!")
   return successResponse(res, { data: data });
 });
 
@@ -68,7 +70,7 @@ export const update = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const dataId = Classes.getById(id);
+  const dataId = await Classes.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");
 
   const updated = await Classes.update(id, req.body);

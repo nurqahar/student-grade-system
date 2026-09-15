@@ -30,6 +30,7 @@ export const getById = asyncHandler(async (req, res) => {
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
   const data = await Teacher.getById(id);
+  if (!data) throw new NotFoundError("Teacher Not Found!")
   return successResponse(res, { data: data });
 });
 
@@ -51,7 +52,7 @@ export const deleteData = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const dataId = Teacher.getById(id);
+  const dataId = await Teacher.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
 
   const deleted = await Teacher.delete(id);

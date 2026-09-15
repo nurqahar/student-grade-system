@@ -27,7 +27,10 @@ export const getAll = asyncHandler(async (req, res) => {
 export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
+  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+
   const data = await Level.getById(id);
+  if (!data) throw new NotFoundError("Level Not Found!")
   return successResponse(res, { data: data });
 });
 
@@ -36,8 +39,9 @@ export const update = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const dataId = Level.getById(id);
+  const dataId = await Level.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
+
   const updated = await Level.update(id, req.body);
   return successResponse(res, { data: updated });
 });
@@ -48,8 +52,9 @@ export const deleteData = asyncHandler(async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
 
-  const dataId = Level.getById(id);
+  const dataId = await Level.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
+
   const deleted = await Level.delete(id);
   return successResponse(res, { data: deleted, statusCode: 204 });
 });
