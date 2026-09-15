@@ -32,7 +32,7 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     );
 
     if (!foundStudent) {
-      notFound.push(row);
+      notFound.push("Student");
       continue;
     }
 
@@ -44,7 +44,7 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     );
 
     if (!foundHistory) {
-      notFound.push(row);
+      notFound.push("History Student");
       continue;
     }
 
@@ -56,8 +56,9 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     });
   }
 
-  if (dataToInsert.length === 0) throw new ValidationError(`Data not Match with database ${notFound}`);
-
+  const clearDuplicateNotFound = new Set(notFound)
+  const dataNotFound = [...clearDuplicateNotFound]
+  if (dataToInsert.length === 0) throw new ValidationError(`Failed to upload, Referenced ${dataNotFound} not exist!`)
 
   const inserted = await Absence.uploadCsv(dataToInsert);
   return successResponse(res, { data: inserted, statusCode: 201 });
