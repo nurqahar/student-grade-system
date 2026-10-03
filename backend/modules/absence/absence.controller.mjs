@@ -15,7 +15,8 @@ export const uploadCsv = asyncHandler(async (req, res) => {
   if (!req.file) throw new ValidationError("Empty Data!");
 
   const dataCsv = await csvParser(req.file.buffer);
-  if (!dataCsv || dataCsv.length === 0) throw new ValidationError("CSV File empty or has no data rows!");
+  if (!dataCsv || dataCsv.length === 0)
+    throw new ValidationError("CSV File empty or has no data rows!");
 
   let dataStudents;
   let dataHistoryStudent;
@@ -56,9 +57,12 @@ export const uploadCsv = asyncHandler(async (req, res) => {
     });
   }
 
-  const clearDuplicateNotFound = new Set(notFound)
-  const dataNotFound = [...clearDuplicateNotFound]
-  if (dataToInsert.length === 0) throw new ValidationError(`Failed to upload, Referenced ${dataNotFound} not exist!`)
+  const clearDuplicateNotFound = new Set(notFound);
+  const dataNotFound = [...clearDuplicateNotFound];
+  if (dataToInsert.length === 0)
+    throw new ValidationError(
+      `Failed to upload, Referenced ${dataNotFound} not exist!`,
+    );
 
   const inserted = await Absence.uploadCsv(dataToInsert);
   return successResponse(res, { data: inserted, statusCode: 201 });
@@ -72,17 +76,19 @@ export const getAll = asyncHandler(async (req, res) => {
 export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+  if (isNaN(id) || id <= 0)
+    throw new ValidationError("Id is Not a Number or Zero number");
 
   const data = await Absence.getById(id);
-  if (!data) throw new NotFoundError("Absence Not Found!")
+  if (!data) throw new NotFoundError("Absence Not Found!");
   return successResponse(res, { data: data });
 });
 
 export const update = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+  if (isNaN(id) || id <= 0)
+    throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = await Absence.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");
@@ -94,7 +100,8 @@ export const update = asyncHandler(async (req, res) => {
 export const deleteData = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+  if (isNaN(id) || id <= 0)
+    throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = await Absence.getById(id);
   if (!dataId) throw new NotFoundError("ID Not Found!");

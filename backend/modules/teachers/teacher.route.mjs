@@ -33,10 +33,10 @@ router.delete("/:id", deleteData);
 
 router.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
-    throw new ValidationError(error.message)
+    throw new ValidationError(error.message);
   }
   if (error) {
-    throw new ValidationError(error.message)
+    throw new ValidationError(error.message);
   }
   next();
 });

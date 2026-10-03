@@ -21,15 +21,16 @@ export const uploadCsv = asyncHandler(async (req, res) => {
   if (!req.file) throw new ValidationError("Empty Data!");
 
   const dataCsv = await csvParser(req.file.buffer);
-  if (!dataCsv || dataCsv.length === 0) throw new ValidationError("CSV File empty or has no data rows!");
+  if (!dataCsv || dataCsv.length === 0)
+    throw new ValidationError("CSV File empty or has no data rows!");
 
   let dataClasses;
   let dataLevels;
   let foundLevel;
   dataLevels = await Levels.getAll();
   dataClasses = await Classes.getAll();
-  if (!dataLevels) throw NotFoundError("Data Levels Doesn't Exist")
-  if (!dataClasses) throw NotFoundError("Data Classes Doesn't Exist")
+  if (!dataLevels) throw NotFoundError("Data Levels Doesn't Exist");
+  if (!dataClasses) throw NotFoundError("Data Classes Doesn't Exist");
 
   const dataToInsert = [];
   const notFound = [];
@@ -58,11 +59,10 @@ export const uploadCsv = asyncHandler(async (req, res) => {
       competency_achievement: row.competency_achievement,
       class_id: foundClass.id,
     });
-
-
   }
 
-  if (dataToInsert.length === 0) throw new ValidationError(`Data not Match with database ${notFound}`);
+  if (dataToInsert.length === 0)
+    throw new ValidationError(`Data not Match with database ${notFound}`);
 
   const inserted = await Subject.uploadCsv(dataToInsert);
   return successResponse(res, {
@@ -79,17 +79,19 @@ export const getAll = asyncHandler(async (req, res) => {
 export const getById = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+  if (isNaN(id) || id <= 0)
+    throw new ValidationError("Id is Not a Number or Zero number");
 
   const data = await Subject.getById(id);
-  if (!data) throw new NotFoundError("Student Not Found!")
+  if (!data) throw new NotFoundError("Student Not Found!");
   return successResponse(res, { data: data });
 });
 
 export const update = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+  if (isNaN(id) || id <= 0)
+    throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = await Subject.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
@@ -101,7 +103,8 @@ export const update = asyncHandler(async (req, res) => {
 export const deleteData = asyncHandler(async (req, res) => {
   if (!req.params.id) throw new ValidationError("Please Input id first!");
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id) || id <= 0) throw new ValidationError("Id is Not a Number or Zero number");
+  if (isNaN(id) || id <= 0)
+    throw new ValidationError("Id is Not a Number or Zero number");
 
   const dataId = await Subject.getById(id);
   if (!dataId) throw new NotFoundError("Level Not Found!");
